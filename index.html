@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treino Tarso — PPL 8 Semanas</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #1c2128;
+  --border: #30363d; --border2: #21262d;
+  --red: #f85149; --red2: #da3633;
+  --green: #3fb950; --green2: #238636;
+  --teal: #58a6ff; --teal2: #1f6feb;
+  --amber: #e3b341; --amber2: #9e6a03;
+  --purple: #bc8cff;
+  --text: #e6edf3; --muted: #8b949e; --dim: #484f58;
+  --nav-w: 200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+a{color:var(--teal);text-decoration:none}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--nav-w);min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;overflow-y:auto}
+#sidebar-header{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+#sidebar-header span{font-weight:700;font-size:13px;color:var(--text)}
+#sidebar-header small{display:block;color:var(--muted);font-size:11px;font-weight:400}
+.nav-group{padding:8px 0}
+.nav-label{padding:4px 16px;font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:8px;padding:6px 16px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s;border-left:2px solid transparent}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--bg3);color:var(--teal);border-left-color:var(--teal)}
+.nav-icon{width:16px;text-align:center;font-size:14px}
+
+/* ── MAIN ── */
+#main{margin-left:var(--nav-w);flex:1;padding:24px;max-width:960px}
+
+/* ── SECTIONS ── */
+.section{display:none}
+.section.active{display:block}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text)}
+h1.page-title{font-size:22px;font-weight:700;margin-bottom:4px}
+p.page-sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+h2.section-heading{font-size:16px;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* ── GRID ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+/* ── STAT BOXES ── */
+.stat-box{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:14px}
+.stat-num{font-size:24px;font-weight:700}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.badge-green{background:#1a3a2a;color:var(--green)}
+.badge-blue{background:#0d2149;color:var(--teal)}
+.badge-amber{background:#2d2008;color:var(--amber)}
+.badge-red{background:#3a1c1c;color:var(--red)}
+.badge-purple{background:#1e1333;color:var(--purple)}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 10px;background:var(--bg3);color:var(--muted);font-weight:600;font-size:11px;border-bottom:1px solid var(--border)}
+td{padding:8px 10px;border-bottom:1px solid var(--border2);vertical-align:top}
+tr:hover td{background:var(--bg3)}
+
+/* ── EXERCISES ── */
+.ex-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border2)}
+.ex-row:last-child{border-bottom:none}
+.ex-num{width:24px;height:24px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0;margin-top:2px}
+.ex-name{font-weight:600;font-size:13px}
+.ex-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.pill{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.pill-blue{border-color:#1f6feb;color:var(--teal);background:#0d2149}
+.pill-green{border-color:#238636;color:var(--green);background:#0d3320}
+.pill-amber{border-color:#9e6a03;color:var(--amber);background:#2d1f00}
+
+/* ── TIMER ── */
+#timer-widget{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;width:200px;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+#timer-display{font-size:36px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums;color:var(--text);margin:8px 0}
+#timer-display.running{color:var(--green)}
+#timer-display.done{color:var(--red);animation:pulse .5s ease-in-out infinite alternate}
+@keyframes pulse{from{opacity:1}to{opacity:.4}}
+.timer-presets{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:10px}
+.timer-presets button{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:3px 7px;border-radius:4px;cursor:pointer}
+.timer-presets button:hover{border-color:var(--teal);color:var(--teal)}
+.timer-btns{display:flex;gap:6px;justify-content:center}
+.timer-btns button{flex:1;padding:6px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:600}
+#btn-start{background:var(--green2);color:#fff}
+#btn-reset{background:var(--bg3);border:1px solid var(--border);color:var(--muted)}
+#timer-toggle{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;z-index:201;display:none}
+
+/* ── INPUTS ── */
+input,select,textarea{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:13px;width:100%;outline:none;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(31,111,235,.2)}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.form-group{margin-bottom:12px}
+button.btn{padding:8px 18px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:600}
+button.btn-primary{background:var(--green2);color:#fff}
+button.btn-primary:hover{background:#2ea043}
+button.btn-secondary{background:var(--bg3);border:1px solid var(--border);color:var(--text)}
+button.btn-secondary:hover{border-color:var(--teal);color:var(--teal)}
+button.btn-danger{background:var(--red2);color:#fff}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tab{padding:8px 16px;cursor:pointer;font-size:13px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  #sidebar{display:none}
+  #main{margin-left:0;padding:12px;padding-bottom:80px}
+  #mobile-nav{display:flex!important}
+  #timer-widget,#timer-toggle{bottom:80px}
+  .grid2,.grid3{grid-template-columns:1fr}
+}
+#mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:100;overflow-x:auto}
+#mobile-nav-inner{display:flex;white-space:nowrap;padding:4px 8px}
+.mob-btn{display:flex;flex-direction:column;align-items:center;padding:6px 12px;cursor:pointer;font-size:10px;color:var(--muted);gap:2px;border-radius:6px;border:none;background:none;white-space:nowrap}
+.mob-btn.active{color:var(--teal)}
+.mob-btn span{font-size:18px}
+
+/* ── TRACKER ── */
+.tracker-set-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.tracker-set-row label{width:50px;flex-shrink:0;margin-bottom:0;color:var(--muted);font-size:12px}
+.tracker-set-row input{max-width:80px}
+.tonnage-display{font-size:18px;font-weight:700;color:var(--amber)}
+
+/* ── NUTRI RESULT ── */
+.macro-bar{height:8px;border-radius:4px;margin-top:4px;overflow:hidden;background:var(--bg3)}
+.macro-fill{height:100%;border-radius:4px}
+
+/* ── SCHEDULE TABLE ── */
+.sched-day{padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.day-am{background:#0d2149;color:var(--teal)}
+.day-pm{background:#1a3a2a;color:var(--green)}
+.day-rest{background:var(--bg3);color:var(--muted)}
+
+/* ── HR ZONE ── */
+.zone-bar{height:6px;border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="sidebar-header">
+    <div style="width:32px;height:32px;background:linear-gradient(135deg,#1f6feb,#238636);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">💪</div>
+    <div>
+      <span>Treino Tarso</span>
+      <small>PPL · 8 Semanas Cutting</small>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Geral</div>
+    <div class="nav-item active" onclick="nav('dashboard')"><span class="nav-icon">🏠</span>Dashboard</div>
+    <div class="nav-item" onclick="nav('semanal')"><span class="nav-icon">📅</span>Plano Semanal</div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Cardio & Mobilidade</div>
+    <div class="nav-item" onclick="nav('bike')"><span class="nav-icon">🚴</span>Bike</div>
+    <div class="nav-item" onclick="nav('natacao')"><span class="nav-icon">🏊</span>Natação</div>
+    <div class="nav-item" onclick="nav('mobilidade')"><span class="nav-icon">🧘</span>Mobilidade</div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Força (Semana A)</div>
+    <div class="nav-item" onclick="nav('pushA')"><span class="nav-icon">🔴</span>Push A</div>
+    <div class="nav-item" onclick="nav('pullA')"><span class="nav-icon">🔵</span>Pull A</div>
+    <div class="nav-item" onclick="nav('legsA')"><span class="nav-icon">🟢</span>Legs A</div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Hipertrofia (Semana B)</div>
+    <div class="nav-item" onclick="nav('pushB')"><span class="nav-icon">🔴</span>Push B</div>
+    <div class="nav-item" onclick="nav('pullB')"><span class="nav-icon">🔵</span>Pull B</div>
+    <div class="nav-item" onclick="nav('legsB')"><span class="nav-icon">🟢</span>Legs B</div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Suporte</div>
+    <div class="nav-item" onclick="nav('along')"><span class="nav-icon">🤸</span>Alongamento</div>
+    <div class="nav-item" onclick="nav('tracker')"><span class="nav-icon">📊</span>Tracker</div>
+    <div class="nav-item" onclick="nav('metricas')"><span class="nav-icon">📏</span>Métricas</div>
+    <div class="nav-item" onclick="nav('nutricao')"><span class="nav-icon">🥗</span>Nutrição</div>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div id="mobile-nav">
+  <div id="mobile-nav-inner">
+    <button class="mob-btn active" onclick="nav('dashboard')"><span>🏠</span>Início</button>
+    <button class="mob-btn" onclick="nav('semanal')"><span>📅</span>Semana</button>
+    <button class="mob-btn" onclick="nav('pushA')"><span>🔴</span>Push A</button>
+    <button class="mob-btn" onclick="nav('pullA')"><span>🔵</span>Pull A</button>
+    <button class="mob-btn" onclick="nav('legsA')"><span>🟢</span>Legs A</button>
+    <button class="mob-btn" onclick="nav('pushB')"><span>🔴</span>Push B</button>
+    <button class="mob-btn" onclick="nav('pullB')"><span>🔵</span>Pull B</button>
+    <button class="mob-btn" onclick="nav('legsB')"><span>🟢</span>Legs B</button>
+    <button class="mob-btn" onclick="nav('bike')"><span>🚴</span>Bike</button>
+    <button class="mob-btn" onclick="nav('natacao')"><span>🏊</span>Natação</button>
+    <button class="mob-btn" onclick="nav('mobilidade')"><span>🧘</span>Mobil.</button>
+    <button class="mob-btn" onclick="nav('along')"><span>🤸</span>Along.</button>
+    <button class="mob-btn" onclick="nav('tracker')"><span>📊</span>Tracker</button>
+    <button class="mob-btn" onclick="nav('metricas')"><span>📏</span>Métricas</button>
+    <button class="mob-btn" onclick="nav('nutricao')"><span>🥗</span>Nutrição</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main id="main">
+
+<!-- ════════════════════════════════════════════════════════════════ DASHBOARD -->
+<div id="sec-dashboard" class="section active">
+  <h1 class="page-title">Dashboard</h1>
+  <p class="page-sub">PPL 2× semanal · Mesociclo cutting 8 semanas · Tarso, 46 anos</p>
+
+  <div class="grid3" style="margin-bottom:16px">
+    <div class="stat-box"><div class="stat-num" style="color:var(--amber)">8</div><div class="stat-lbl">Semanas de mesociclo</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--green)">6</div><div class="stat-lbl">Sessões de força/semana</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:var(--teal)">2727</div><div class="stat-lbl">kcal/dia (meta)</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Perfil do Programa</div>
+      <table>
+        <tr><td style="color:var(--muted);width:120px">Objetivo</td><td><span class="badge badge-red">Cutting</span></td></tr>
+        <tr><td style="color:var(--muted)">Split</td><td>PPL (Push/Pull/Legs)</td></tr>
+        <tr><td style="color:var(--muted)">Frequência</td><td>6× força + 7× cardio</td></tr>
+        <tr><td style="color:var(--muted)">Semana A</td><td>Força (5×5, 4×6-8)</td></tr>
+        <tr><td style="color:var(--muted)">Semana B</td><td>Hipertrofia (4×10-15)</td></tr>
+        <tr><td style="color:var(--muted)">Duração</td><td>8 semanas</td></tr>
+        <tr><td style="color:var(--muted)">Deload</td><td>Semana 4 e 8 (−40% vol.)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Periodização Semanal</div>
+      <table>
+        <tr><th>Semanas</th><th>Fase</th><th>Volume</th></tr>
+        <tr><td>1–3</td><td><span class="badge badge-blue">Acumulação</span></td><td>Base</td></tr>
+        <tr><td>4</td><td><span class="badge badge-green">Deload</span></td><td>−40%</td></tr>
+        <tr><td>5–7</td><td><span class="badge badge-amber">Intensificação</span></td><td>+5% carga</td></tr>
+        <tr><td>8</td><td><span class="badge badge-green">Deload</span></td><td>−40%</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Macros do Dia</div>
+      <div class="grid2" style="gap:10px">
+        <div>
+          <div style="font-size:13px;color:var(--muted)">Proteína</div>
+          <div style="font-size:20px;font-weight:700;color:var(--teal)">240g</div>
+          <div class="macro-bar"><div class="macro-fill" style="width:100%;background:var(--teal)"></div></div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--muted)">Carboidrato</div>
+          <div style="font-size:20px;font-weight:700;color:var(--amber)">239g</div>
+          <div class="macro-bar"><div class="macro-fill" style="width:99%;background:var(--amber)"></div></div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--muted)">Gordura</div>
+          <div style="font-size:20px;font-weight:700;color:var(--purple)">90g</div>
+          <div class="macro-bar"><div class="macro-fill" style="width:38%;background:var(--purple)"></div></div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--muted)">Água</div>
+          <div style="font-size:20px;font-weight:700;color:var(--green)">4L</div>
+          <div class="macro-bar"><div class="macro-fill" style="width:80%;background:var(--green)"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Zonas de FC (FC max 174 bpm)</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+            <span style="color:var(--muted)">Z1 Recuperação</span><span>96–113 bpm</span>
+          </div>
+          <div class="macro-bar"><div class="zone-bar macro-fill" style="width:35%;background:#4d9de0"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+            <span style="color:var(--muted)">Z2 Endurance</span><span>113–131 bpm</span>
+          </div>
+          <div class="macro-bar"><div class="zone-bar macro-fill" style="width:53%;background:#3fb950"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+            <span style="color:var(--muted)">Z3 Tempo</span><span>131–143 bpm</span>
+          </div>
+          <div class="macro-bar"><div class="zone-bar macro-fill" style="width:66%;background:var(--amber)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+            <span style="color:var(--muted)">Z4 Limiar</span><span>143–157 bpm</span>
+          </div>
+          <div class="macro-bar"><div class="zone-bar macro-fill" style="width:80%;background:#e07b54"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+            <span style="color:var(--muted)">Z5 VO₂max</span><span>157–174 bpm</span>
+          </div>
+          <div class="macro-bar"><div class="zone-bar macro-fill" style="width:100%;background:var(--red)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ PLANO SEMANAL -->
+<div id="sec-semanal" class="section">
+  <h1 class="page-title">Plano Semanal</h1>
+  <p class="page-sub">Two-a-day · Manhã cardio/mobilidade · Noite força</p>
+  <div class="card">
+    <table>
+      <thead><tr><th>Dia</th><th>Manhã</th><th>Noite</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Segunda</strong></td><td><span class="sched-day day-am">Bike HIIT 30min</span></td><td><span class="sched-day day-pm">Push A — Força</span></td></tr>
+        <tr><td><strong>Terça</strong></td><td><span class="sched-day day-am">Natação Técnica 45min</span></td><td><span class="sched-day day-pm">Pull A — Força</span></td></tr>
+        <tr><td><strong>Quarta</strong></td><td><span class="sched-day day-am">Bike LISS 45min</span></td><td><span class="sched-day day-pm">Legs A — Força</span></td></tr>
+        <tr><td><strong>Quinta</strong></td><td><span class="sched-day day-am">Natação Intervalo 50min</span></td><td><span class="sched-day day-pm">Push B — Hipertrofia</span></td></tr>
+        <tr><td><strong>Sexta</strong></td><td><span class="sched-day day-am">Bike Tabata 25min</span></td><td><span class="sched-day day-pm">Pull B — Hipertrofia</span></td></tr>
+        <tr><td><strong>Sábado</strong></td><td><span class="sched-day day-am">Bike LISS 60min</span></td><td><span class="sched-day day-pm">Legs B — Hipertrofia</span></td></tr>
+        <tr><td><strong>Domingo</strong></td><td><span class="sched-day day-am">Natação Recuperação 40min</span></td><td><span class="sched-day day-rest">Mobilidade Longa</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Distribuição de Volume</div>
+    <table>
+      <thead><tr><th>Grupo</th><th>Séries/semana</th><th>Semana A</th><th>Semana B</th></tr></thead>
+      <tbody>
+        <tr><td>Peito</td><td>16–20</td><td>7 (Push A)</td><td>12 (Push B)</td></tr>
+        <tr><td>Ombro</td><td>16–20</td><td>7 (Push A)</td><td>12 (Push B)</td></tr>
+        <tr><td>Tríceps</td><td>12–16</td><td>7 (Push A)</td><td>6 (Push B)</td></tr>
+        <tr><td>Costas</td><td>14–18</td><td>11 (Pull A)</td><td>14 (Pull B)</td></tr>
+        <tr><td>Bíceps</td><td>10–14</td><td>7 (Pull A)</td><td>6 (Pull B)</td></tr>
+        <tr><td>Quadríceps</td><td>12–16</td><td>13 (Legs A)</td><td>7 (Legs B)</td></tr>
+        <tr><td>Posterior/Glúteo</td><td>14–18</td><td>4 (Legs A)</td><td>16 (Legs B)</td></tr>
+        <tr><td>Panturrilha</td><td>10–12</td><td>5 (Legs A)</td><td>5 (Legs B)</td></tr>
+        <tr><td>Abdome</td><td>8–10</td><td>4 (Legs A)</td><td>4 (Legs B)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ BIKE -->
+<div id="sec-bike" class="section">
+  <h1 class="page-title">Bike (Indoor/Outdoor)</h1>
+  <p class="page-sub">Cardio matinal · Protocolos por dia da semana</p>
+
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab('bike','hiit')">HIIT (Seg)</div>
+    <div class="tab" onclick="switchTab('bike','tabata')">Tabata (Sex)</div>
+    <div class="tab" onclick="switchTab('bike','liss')">LISS (Qua/Sáb)</div>
+    <div class="tab" onclick="switchTab('bike','outdoor')">Outdoor</div>
+  </div>
+
+  <div id="bike-hiit">
+    <div class="card">
+      <div class="card-title">HIIT — Segunda · 30 minutos</div>
+      <table>
+        <thead><tr><th>Bloco</th><th>Duração</th><th>Intensidade</th><th>FC Alvo</th></tr></thead>
+        <tbody>
+          <tr><td>Aquecimento</td><td>5 min</td><td>Leve</td><td>Z1 96–113</td></tr>
+          <tr><td>Intervalo ON (8×)</td><td>30s cada</td><td>Máximo</td><td>Z5 157–174</td></tr>
+          <tr><td>Intervalo OFF (8×)</td><td>1min cada</td><td>Muito leve</td><td>Z1 &lt;113</td></tr>
+          <tr><td>Moderado</td><td>5 min</td><td>Moderado</td><td>Z3 131–143</td></tr>
+          <tr><td>Desaquecimento</td><td>5 min</td><td>Muito leve</td><td>Z1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="bike-tabata" style="display:none">
+    <div class="card">
+      <div class="card-title">Tabata — Sexta · 25 minutos</div>
+      <table>
+        <thead><tr><th>Bloco</th><th>Duração</th><th>Protocolo</th><th>FC Alvo</th></tr></thead>
+        <tbody>
+          <tr><td>Aquecimento</td><td>5 min</td><td>Progressivo</td><td>Z1–Z2</td></tr>
+          <tr><td>Tabata (4 rounds)</td><td>4 min</td><td>20s ON / 10s OFF × 8</td><td>Z5</td></tr>
+          <tr><td>Recuperação ativa</td><td>4 min</td><td>Muito leve</td><td>Z1</td></tr>
+          <tr><td>Tabata (4 rounds)</td><td>4 min</td><td>20s ON / 10s OFF × 8</td><td>Z5</td></tr>
+          <tr><td>Desaquecimento</td><td>5 min</td><td>Muito leve</td><td>Z1</td></tr>
+          <tr><td>Alongamento</td><td>3 min</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="bike-liss" style="display:none">
+    <div class="card">
+      <div class="card-title">LISS — Quarta (45min) e Sábado (60min)</div>
+      <table>
+        <thead><tr><th>Fase</th><th>Qua</th><th>Sáb</th><th>FC Alvo</th></tr></thead>
+        <tbody>
+          <tr><td>Aquecimento</td><td>5 min</td><td>5 min</td><td>Z1</td></tr>
+          <tr><td>LISS Principal</td><td>35 min</td><td>50 min</td><td>Z2 113–131</td></tr>
+          <tr><td>Desaquecimento</td><td>5 min</td><td>5 min</td><td>Z1</td></tr>
+        </tbody>
+      </table>
+      <p style="color:var(--muted);font-size:12px;margin-top:10px">Cadência recomendada: 70–90 RPM · Resistência 4–6/10</p>
+    </div>
+  </div>
+
+  <div id="bike-outdoor" style="display:none">
+    <div class="card">
+      <div class="card-title">Outdoor — Substituição Opcional</div>
+      <table>
+        <thead><tr><th>Sessão</th><th>Percurso</th><th>Pace</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>LISS outdoor</td><td>15–20 km</td><td>Conversacional</td><td>Terreno plano ou levemente ondulado</td></tr>
+          <tr><td>HIIT outdoor</td><td>10–12 km</td><td>Sprint + recuperação</td><td>Incluir subidas para variabilidade</td></tr>
+          <tr><td>Endurance</td><td>25–30 km</td><td>Aeróbico</td><td>Substituição sábado (60min)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ NATAÇÃO -->
+<div id="sec-natacao" class="section">
+  <h1 class="page-title">Natação</h1>
+  <p class="page-sub">Terça técnica · Quinta intervalo · Domingo recuperação</p>
+
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab('nat','tec')">Técnica (Ter)</div>
+    <div class="tab" onclick="switchTab('nat','int')">Intervalo (Qui)</div>
+    <div class="tab" onclick="switchTab('nat','rec')">Recuperação (Dom)</div>
+  </div>
+
+  <div id="nat-tec">
+    <div class="card">
+      <div class="card-title">Sessão Técnica — Terça · 45 minutos · ~1400m</div>
+      <table>
+        <thead><tr><th>Bloco</th><th>Distância</th><th>Foco</th><th>Intervalo</th></tr></thead>
+        <tbody>
+          <tr><td>Aquecimento</td><td>200m</td><td>Nado livre progressivo</td><td>—</td></tr>
+          <tr><td>Drill técnico A</td><td>4×50m</td><td>Posição corpo / rotação quadril</td><td>20s</td></tr>
+          <tr><td>Drill técnico B</td><td>4×50m</td><td>Braçada unilateral</td><td>20s</td></tr>
+          <tr><td>Principal</td><td>4×100m</td><td>Nado completo com foco técnico</td><td>30s</td></tr>
+          <tr><td>Kick set</td><td>4×50m</td><td>Batida de pernas (prancha)</td><td>20s</td></tr>
+          <tr><td>Desaquecimento</td><td>100m</td><td>Nado costas suave</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="nat-int" style="display:none">
+    <div class="card">
+      <div class="card-title">Sessão de Intervalo — Quinta · 50 minutos · ~2000m</div>
+      <table>
+        <thead><tr><th>Bloco</th><th>Distância</th><th>Intensidade</th><th>Intervalo</th></tr></thead>
+        <tbody>
+          <tr><td>Aquecimento</td><td>300m</td><td>Z1–Z2</td><td>—</td></tr>
+          <tr><td>Série intervalo A</td><td>6×100m</td><td>Z4 (forte)</td><td>20s</td></tr>
+          <tr><td>Recuperação ativa</td><td>200m</td><td>Z1</td><td>—</td></tr>
+          <tr><td>Série intervalo B</td><td>4×50m</td><td>Z5 (sprint)</td><td>30s</td></tr>
+          <tr><td>Desaquecimento</td><td>200m</td><td>Z1</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="nat-rec" style="display:none">
+    <div class="card">
+      <div class="card-title">Sessão de Recuperação — Domingo · 40 minutos · ~1000m</div>
+      <table>
+        <thead><tr><th>Bloco</th><th>Distância</th><th>Estilo</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Aquecimento</td><td>100m</td><td>Livre suave</td><td>FC &lt;113 bpm</td></tr>
+          <tr><td>Fartlek suave</td><td>4×100m</td><td>Livre + costas alternado</td><td>Z1–Z2</td></tr>
+          <tr><td>Peito técnico</td><td>200m</td><td>Peito (breaststroke)</td><td>Foco em coordenação</td></tr>
+          <tr><td>Flutuação</td><td>2×100m</td><td>Costas relaxado</td><td>Respiração profunda</td></tr>
+          <tr><td>Desaquecimento</td><td>100m</td><td>Escolha</td><td>Suavíssimo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ MOBILIDADE -->
+<div id="sec-mobilidade" class="section">
+  <h1 class="page-title">Mobilidade</h1>
+  <p class="page-sub">3 rotinas · Casa · Sem equipamento</p>
+
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab('mob','manha')">Manhã Ativa</div>
+    <div class="tab" onclick="switchTab('mob','pos')">Pós-Treino</div>
+    <div class="tab" onclick="switchTab('mob','dom')">Domingo Longa</div>
+  </div>
+
+  <div id="mob-manha">
+    <div class="card">
+      <div class="card-title">Rotina Manhã Ativa — 10–15 min · Diário</div>
+      <table>
+        <thead><tr><th>#</th><th>Exercício</th><th>Séries×Reps/Tempo</th></tr></thead>
+        <tbody id="mob-manha-rows"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="mob-pos" style="display:none">
+    <div class="card">
+      <div class="card-title">Rotina Pós-Treino — 10 min</div>
+      <table>
+        <thead><tr><th>#</th><th>Exercício</th><th>Séries×Reps/Tempo</th></tr></thead>
+        <tbody id="mob-pos-rows"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="mob-dom" style="display:none">
+    <div class="card">
+      <div class="card-title">Rotina Domingo Longa — 30–40 min</div>
+      <table>
+        <thead><tr><th>Bloco</th><th>Exercícios</th><th>Tempo</th></tr></thead>
+        <tbody id="mob-dom-rows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ PUSH A -->
+<div id="sec-pushA" class="section">
+  <h1 class="page-title">Push A — Força</h1>
+  <p class="page-sub">Segunda noite · Peito / Ombro / Tríceps · Foco em força máxima</p>
+  <div class="card">
+    <div class="ex-row" style="background:var(--bg3);border-radius:6px;padding:10px;margin-bottom:8px;border-bottom:none">
+      <div style="font-size:12px;color:var(--muted)"><strong>Aquecimento:</strong> 5–10 min · 50% 1RM (2×10) · Mobilidade ombros + rotação manguito</div>
+    </div>
+    <div id="pushA-exercises"></div>
+    <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--muted)">
+      <strong>Finisher:</strong> Face pull leve 2×20 (descompressão ombro)
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ PULL A -->
+<div id="sec-pullA" class="section">
+  <h1 class="page-title">Pull A — Força</h1>
+  <p class="page-sub">Terça noite · Costas / Bíceps · Foco em força máxima</p>
+  <div class="card">
+    <div class="ex-row" style="background:var(--bg3);border-radius:6px;padding:10px;margin-bottom:8px;border-bottom:none">
+      <div style="font-size:12px;color:var(--muted)"><strong>Aquecimento:</strong> Barra morta 40% 1RM (2×5) · Mobilidade quadril + isquiotibiais</div>
+    </div>
+    <div id="pullA-exercises"></div>
+    <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--muted)">
+      <strong>Finisher:</strong> Facepull leve 2×20 + alongamento bíceps/antebraço
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ LEGS A -->
+<div id="sec-legsA" class="section">
+  <h1 class="page-title">Legs A — Força</h1>
+  <p class="page-sub">Quarta noite · Quadríceps / Posterior / Panturrilha · Foco em força máxima</p>
+  <div class="card">
+    <div class="ex-row" style="background:var(--bg3);border-radius:6px;padding:10px;margin-bottom:8px;border-bottom:none">
+      <div style="font-size:12px;color:var(--muted)"><strong>Aquecimento:</strong> Agachamento 50% 1RM (2×8) · Mobilidade quadril + tornozelo · Birddog 2×10</div>
+    </div>
+    <div id="legsA-exercises"></div>
+    <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--muted)">
+      <strong>Finisher:</strong> Foam roll quadríceps + posterior 5 min
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ PUSH B -->
+<div id="sec-pushB" class="section">
+  <h1 class="page-title">Push B — Hipertrofia</h1>
+  <p class="page-sub">Quinta noite · Peito / Ombro / Tríceps · Foco em volume e pump</p>
+  <div class="card">
+    <div class="ex-row" style="background:var(--bg3);border-radius:6px;padding:10px;margin-bottom:8px;border-bottom:none">
+      <div style="font-size:12px;color:var(--muted)"><strong>Aquecimento:</strong> Band pull-apart 2×20 · Rotação manguito leve · Mobilidade torácica</div>
+    </div>
+    <div id="pushB-exercises"></div>
+    <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--muted)">
+      <strong>Finisher:</strong> Prancha 3×45s (core)
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ PULL B -->
+<div id="sec-pullB" class="section">
+  <h1 class="page-title">Pull B — Hipertrofia</h1>
+  <p class="page-sub">Sexta noite · Costas / Bíceps · Foco em volume e pump</p>
+  <div class="card">
+    <div class="ex-row" style="background:var(--bg3);border-radius:6px;padding:10px;margin-bottom:8px;border-bottom:none">
+      <div style="font-size:12px;color:var(--muted)"><strong>Aquecimento:</strong> Band pull-apart 2×20 · Rotação escapular · Mobilidade lombar</div>
+    </div>
+    <div id="pullB-exercises"></div>
+    <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--muted)">
+      <strong>Finisher:</strong> Hammer curl isométrico 2×30s + forearm stretch
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ LEGS B -->
+<div id="sec-legsB" class="section">
+  <h1 class="page-title">Legs B — Hipertrofia</h1>
+  <p class="page-sub">Sábado noite · Posterior / Glúteo / Panturrilha · Foco em volume</p>
+  <div class="card">
+    <div class="ex-row" style="background:var(--bg3);border-radius:6px;padding:10px;margin-bottom:8px;border-bottom:none">
+      <div style="font-size:12px;color:var(--muted)"><strong>Aquecimento:</strong> Hip circle 2×15 · Glute bridge 2×15 · Mobilidade quadril</div>
+    </div>
+    <div id="legsB-exercises"></div>
+    <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--muted)">
+      <strong>Finisher:</strong> Foam roll posterior + glúteo 5 min
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ ALONGAMENTO -->
+<div id="sec-along" class="section">
+  <h1 class="page-title">Alongamento Pós-Treino</h1>
+  <p class="page-sub">Executar imediatamente após o treino de força · 8–12 min</p>
+
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab('along','push')">Pós-Push</div>
+    <div class="tab" onclick="switchTab('along','pull')">Pós-Pull</div>
+    <div class="tab" onclick="switchTab('along','legs')">Pós-Legs</div>
+  </div>
+
+  <div id="along-push">
+    <div class="card">
+      <div class="card-title">Pós-Push — Peito / Ombro / Tríceps</div>
+      <table>
+        <thead><tr><th>#</th><th>Exercício</th><th>Tempo</th><th>Observação</th></tr></thead>
+        <tbody id="along-push-rows"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="along-pull" style="display:none">
+    <div class="card">
+      <div class="card-title">Pós-Pull — Costas / Bíceps</div>
+      <table>
+        <thead><tr><th>#</th><th>Exercício</th><th>Tempo</th><th>Observação</th></tr></thead>
+        <tbody id="along-pull-rows"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="along-legs" style="display:none">
+    <div class="card">
+      <div class="card-title">Pós-Legs — Quadríceps / Posterior / Glúteo</div>
+      <table>
+        <thead><tr><th>#</th><th>Exercício</th><th>Tempo</th><th>Observação</th></tr></thead>
+        <tbody id="along-legs-rows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ TRACKER -->
+<div id="sec-tracker" class="section">
+  <h1 class="page-title">Tracker de Carga</h1>
+  <p class="page-sub">8 semanas · 9 exercícios principais · Salvo localmente no navegador</p>
+
+  <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <div class="form-group" style="margin:0;min-width:120px">
+      <label>Semana</label>
+      <select id="tracker-week" onchange="loadTracker()">
+        <option value="1">Semana 1</option><option value="2">Semana 2</option>
+        <option value="3">Semana 3</option><option value="4">Semana 4</option>
+        <option value="5">Semana 5</option><option value="6">Semana 6</option>
+        <option value="7">Semana 7</option><option value="8">Semana 8</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin:0;min-width:160px">
+      <label>Exercício</label>
+      <select id="tracker-ex" onchange="loadTracker()">
+        <option value="supino_reto">Supino reto barra</option>
+        <option value="desenv_militar">Desenvolvimento militar</option>
+        <option value="trap_bar">Trap bar deadlift</option>
+        <option value="barra_fixa">Barra fixa lastrada</option>
+        <option value="remada_curvada">Remada curvada barra</option>
+        <option value="agachamento">Agachamento livre</option>
+        <option value="hack_squat">Hack squat</option>
+        <option value="stiff">Stiff barra</option>
+        <option value="hip_thrust">Hip thrust barra</option>
+      </select>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-primary" onclick="saveTracker()">Salvar</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="tracker-sets"></div>
+    <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+      <label>Notas da sessão</label>
+      <textarea id="tracker-notes" rows="2" placeholder="RIR, sensações, ajustes..."></textarea>
+    </div>
+    <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <span style="color:var(--muted);font-size:12px">Tonelagem total:</span>
+        <span class="tonnage-display" id="tracker-tonnage">0 kg</span>
+      </div>
+      <button class="btn btn-secondary" onclick="clearTracker()">Limpar</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Histórico — <span id="tracker-ex-label">Supino reto barra</span></div>
+    <div id="tracker-history"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ MÉTRICAS -->
+<div id="sec-metricas" class="section">
+  <h1 class="page-title">Métricas Corporais</h1>
+  <p class="page-sub">Medições semanais · Salvo localmente · 12 semanas</p>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">Adicionar Medição</div>
+    <div class="grid3">
+      <div class="form-group"><label>Data</label><input type="date" id="m-date"></div>
+      <div class="form-group"><label>Peso (kg)</label><input type="number" id="m-peso" step="0.1" placeholder="ex: 82.5"></div>
+      <div class="form-group"><label>Gordura (%)</label><input type="number" id="m-gordura" step="0.1" placeholder="ex: 18.5"></div>
+      <div class="form-group"><label>Cintura (cm)</label><input type="number" id="m-cintura" step="0.5" placeholder="ex: 86"></div>
+      <div class="form-group"><label>Quadril (cm)</label><input type="number" id="m-quadril" step="0.5" placeholder="ex: 98"></div>
+      <div class="form-group"><label>Peito (cm)</label><input type="number" id="m-peito" step="0.5" placeholder="ex: 104"></div>
+      <div class="form-group"><label>Braço (cm)</label><input type="number" id="m-braco" step="0.5" placeholder="ex: 38"></div>
+      <div class="form-group"><label>Coxa (cm)</label><input type="number" id="m-coxa" step="0.5" placeholder="ex: 58"></div>
+      <div class="form-group"><label>Panturrilha (cm)</label><input type="number" id="m-panturrilha" step="0.5" placeholder="ex: 38"></div>
+    </div>
+    <button class="btn btn-primary" onclick="saveMetrics()">Adicionar</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Histórico</div>
+    <div id="metrics-table-container" style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr><th>Data</th><th>Peso</th><th>Gord%</th><th>Cintura</th><th>Quadril</th><th>Peito</th><th>Braço</th><th>Coxa</th><th>Pant.</th><th></th></tr>
+        </thead>
+        <tbody id="metrics-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ NUTRIÇÃO -->
+<div id="sec-nutricao" class="section">
+  <h1 class="page-title">Nutrição</h1>
+  <p class="page-sub">Calculadora Mifflin-St Jeor · Macros personalizados · Suplementação</p>
+
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab('nut','calc')">Calculadora</div>
+    <div class="tab" onclick="switchTab('nut','refeicoes')">Refeições</div>
+    <div class="tab" onclick="switchTab('nut','supl')">Suplementos</div>
+    <div class="tab" onclick="switchTab('nut','dicas')">Diretrizes</div>
+  </div>
+
+  <div id="nut-calc">
+    <div class="card">
+      <div class="card-title">Calculadora de Macros — Mifflin-St Jeor</div>
+      <div class="grid3">
+        <div class="form-group"><label>Peso (kg)</label><input type="number" id="n-peso" value="100" oninput="calcNutri()"></div>
+        <div class="form-group"><label>Altura (cm)</label><input type="number" id="n-altura" value="175" oninput="calcNutri()"></div>
+        <div class="form-group"><label>Idade</label><input type="number" id="n-idade" value="46" oninput="calcNutri()"></div>
+        <div class="form-group">
+          <label>Nível de atividade</label>
+          <select id="n-ativ" onchange="calcNutri()">
+            <option value="1.2">Sedentário (1.2)</option>
+            <option value="1.375">Leve (1.375)</option>
+            <option value="1.55">Moderado (1.55)</option>
+            <option value="1.725" selected>Muito ativo (1.725)</option>
+            <option value="1.9">Extra ativo (1.9)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Déficit calórico (%)</label>
+          <select id="n-deficit" onchange="calcNutri()">
+            <option value="0">Manutenção (0%)</option>
+            <option value="10">Déficit leve (10%)</option>
+            <option value="18" selected>Déficit moderado (18%)</option>
+            <option value="25">Déficit agressivo (25%)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Proteína (g/kg)</label>
+          <input type="number" id="n-prot" value="2.4" step="0.1" oninput="calcNutri()">
+        </div>
+      </div>
+    </div>
+    <div class="card" id="nutri-results">
+      <div class="card-title">Resultados</div>
+      <div class="grid2">
+        <div>
+          <div class="grid2" style="gap:8px">
+            <div class="stat-box"><div class="stat-num" id="r-tmb" style="color:var(--teal)">1900</div><div class="stat-lbl">TMB (kcal)</div></div>
+            <div class="stat-box"><div class="stat-num" id="r-tdee" style="color:var(--amber)">3325</div><div class="stat-lbl">TDEE (kcal)</div></div>
+            <div class="stat-box"><div class="stat-num" id="r-target" style="color:var(--green)">2727</div><div class="stat-lbl">Meta (kcal)</div></div>
+            <div class="stat-box"><div class="stat-num" id="r-agua" style="color:var(--purple)">4.0L</div><div class="stat-lbl">Água/dia</div></div>
+          </div>
+        </div>
+        <div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="color:var(--teal)">Proteína</span>
+              <strong id="r-prot">240g</strong>
+            </div>
+            <div class="macro-bar"><div class="macro-fill" id="bar-prot" style="background:var(--teal)"></div></div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="color:var(--amber)">Carboidrato</span>
+              <strong id="r-carb">239g</strong>
+            </div>
+            <div class="macro-bar"><div class="macro-fill" id="bar-carb" style="background:var(--amber)"></div></div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="color:var(--purple)">Gordura</span>
+              <strong id="r-gord">90g</strong>
+            </div>
+            <div class="macro-bar"><div class="macro-fill" id="bar-gord" style="background:var(--purple)"></div></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px" id="r-kcal-check">960 + 956 + 810 = 2726 kcal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="nut-refeicoes" style="display:none">
+    <div class="card">
+      <div class="card-title">Distribuição de Refeições (7 refeições / ~2727 kcal)</div>
+      <table>
+        <thead><tr><th>#</th><th>Horário</th><th>Refeição</th><th>kcal</th><th>P/C/G</th></tr></thead>
+        <tbody id="meals-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="nut-supl" style="display:none">
+    <div class="card">
+      <div class="card-title">Protocolo de Suplementação</div>
+      <table>
+        <thead><tr><th>Suplemento</th><th>Dose</th><th>Horário</th><th>Objetivo</th></tr></thead>
+        <tbody id="supl-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="nut-dicas" style="display:none">
+    <div class="card">
+      <div class="card-title">Diretrizes Práticas</div>
+      <ul id="dicas-list" style="list-style:none;padding:0"></ul>
+    </div>
+    <div class="card" style="border-color:var(--red2)">
+      <div class="card-title" style="color:var(--red)">⚠️ Sinais de Alerta — Interromper e Consultar</div>
+      <ul id="alertas-list" style="list-style:none;padding:0"></ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- TIMER WIDGET -->
+<div id="timer-widget">
+  <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:8px;font-weight:600">⏱ PAUSA ENTRE SÉRIES</div>
+  <div class="timer-presets">
+    <button onclick="setTimer(45)">45s</button>
+    <button onclick="setTimer(60)">60s</button>
+    <button onclick="setTimer(75)">75s</button>
+    <button onclick="setTimer(90)">90s</button>
+    <button onclick="setTimer(120)">2min</button>
+    <button onclick="setTimer(180)">3min</button>
+    <button onclick="setTimer(240)">4min</button>
+  </div>
+  <div id="timer-display">1:00</div>
+  <div class="timer-btns">
+    <button id="btn-start" onclick="toggleTimer()">Iniciar</button>
+    <button id="btn-reset" onclick="resetTimer()">Reset</button>
+  </div>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+
+const EXERCISES = {
+  pushA: [
+    {name:'Supino reto barra (com cinto)', sets:'5×5', rep:'5', rir:'RIR 1–2', rest:'3 min', notes:'Cinto lombar. Controle excêntrico 3s.'},
+    {name:'Supino inclinado halteres', sets:'4×6–8', rep:'6–8', rir:'RIR 1–2', rest:'2–3 min', notes:'45° inclinação. Amplitude completa.'},
+    {name:'Desenvolvimento militar smith', sets:'4×5–7', rep:'5–7', rir:'RIR 1–2', rest:'2–3 min', notes:'Barra na frente. Core ativado.'},
+    {name:'Crucifixo cross-over alto', sets:'3×10–12', rep:'10–12', rir:'RIR 0–1', rest:'75s', notes:'Cruzar mãos no final. Foco peito inferior.'},
+    {name:'Elevação lateral halter (sentado)', sets:'4×10–12', rep:'10–12', rir:'RIR 0–1', rest:'60s', notes:'Sentado para isolar. Polegar levemente para baixo.'},
+    {name:'Tríceps testa barra EZ', sets:'4×8–10', rep:'8–10', rir:'RIR 1–2', rest:'75s', notes:'Barra EZ. Cotovelos fixos. Não abrir.'},
+    {name:'Tríceps corda overhead', sets:'3×10–12', rep:'10–12', rir:'RIR 0–1', rest:'60s', notes:'Extensão completa acima da cabeça.'},
+  ],
+  pullA: [
+    {name:'Trap bar deadlift', sets:'5×4–6', rep:'4–6', rir:'RIR 2–3', rest:'3 min', notes:'Pegada alta. Empurrar chão. Cinto lombar.'},
+    {name:'Barra fixa lastrada', sets:'4×5–7', rep:'5–7', rir:'RIR 1–2', rest:'2–3 min', notes:'Lastro por cinto/colete. Amplitude completa.'},
+    {name:'Remada curvada barra', sets:'4×6–8', rep:'6–8', rir:'RIR 1–2', rest:'2 min', notes:'Tronco 45°. Puxar para umbigo. Retração escapular.'},
+    {name:'Pulldown pegada neutra', sets:'3×8–10', rep:'8–10', rir:'RIR 1–2', rest:'90s', notes:'Pegada neutra paralela. Puxar até queixo.'},
+    {name:'Face pull corda + rotação ext.', sets:'4×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Polia alta. Puxar até orelhas + rotação externa.'},
+    {name:'Rosca direta barra W', sets:'4×6–8', rep:'6–8', rir:'RIR 1–2', rest:'75s', notes:'Barra W (curva). Cotovelos fixos. Supinação plena.'},
+    {name:'Rosca martelo halter', sets:'3×10–12', rep:'10–12', rir:'RIR 0–1', rest:'60s', notes:'Neutro/martelo. Foco braquial.'},
+  ],
+  legsA: [
+    {name:'Agachamento livre barra (cinto)', sets:'5×5', rep:'5', rir:'RIR 1–2', rest:'3–4 min', notes:'Cinto lombar. Profundidade paralela ou abaixo.'},
+    {name:'Hack squat', sets:'4×8–10', rep:'8–10', rir:'RIR 1–2', rest:'2–3 min', notes:'Pés na plataforma média. Joelhos sobre pontas dos pés.'},
+    {name:'Leg press 45 (pés baixos)', sets:'4×8–10', rep:'8–10', rir:'RIR 1–2', rest:'2 min', notes:'Pés baixos e afastados para quadríceps.'},
+    {name:'Cadeira extensora', sets:'4×10–12', rep:'10–12', rir:'RIR 0–1', rest:'75s', notes:'Drop set na última série. Foco na contração no topo.'},
+    {name:'Stiff barra (foco posterior)', sets:'4×8–10', rep:'8–10', rir:'RIR 1–2', rest:'2 min', notes:'Joelhos levemente dobrados. Sentir isquiotibiais.'},
+    {name:'Panturrilha em pé smith', sets:'5×10–15', rep:'10–15', rir:'RIR 0–1', rest:'60s', notes:'Amplitude completa. Pausa no estiramento.'},
+    {name:'Abdominal cabo ajoelhado', sets:'4×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Polia alta. Flexão do tronco, não do quadril.'},
+  ],
+  pushB: [
+    {name:'Supino inclinado smith', sets:'4×10–12', rep:'10–12', rir:'RIR 1–2', rest:'90s', notes:'Smith machine. 30–45°. Controle constante.'},
+    {name:'Supino reto halteres', sets:'4×12–15', rep:'12–15', rir:'RIR 0–1', rest:'75s', notes:'Amplitude máxima. Squeeze no topo.'},
+    {name:'Crossover na polia (médio)', sets:'4×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Polia média. Cruzar mãos. Foco peito médio.'},
+    {name:'Desenvolvimento halteres sentado', sets:'4×10–12', rep:'10–12', rir:'RIR 0–1', rest:'75s', notes:'Amplitude completa. Não travar cotovelos.'},
+    {name:'Elevação lateral cabo', sets:'4×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Cabo unilateral. Inclinação leve. Foco delt lateral.'},
+    {name:'Crucifixo invertido (delt post)', sets:'4×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Inclinação 30–45°. Polia alta ou halteres.'},
+    {name:'Tríceps francês unilateral cabo', sets:'3×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Polia alta unilateral. Extensão completa.'},
+    {name:'Tríceps coice halter', sets:'3×15–20', rep:'15–20', rir:'RIR 0–1', rest:'45s', notes:'Miorep-matching na última série. Cotovelo fixo.'},
+  ],
+  pullB: [
+    {name:'Pulldown pronada larga', sets:'4×10–12', rep:'10–12', rir:'RIR 1–2', rest:'90s', notes:'Pegada prona larga. Puxar até queixo/esterno.'},
+    {name:'Remada cavalinho (T-bar)', sets:'4×10–12', rep:'10–12', rir:'RIR 1–2', rest:'90s', notes:'Retração escapular. Amplitude completa.'},
+    {name:'Remada unilateral halter', sets:'4×10–12', rep:'10–12', rir:'RIR 0–1', rest:'75s', notes:'Joelho no banco. Puxar cotovelo para trás e alto.'},
+    {name:'Pullover na polia alta', sets:'3×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Polia alta. Braços semi-estendidos. Foco grande dorsal.'},
+    {name:'Face pull corda', sets:'4×15–20', rep:'15–20', rir:'RIR 0–1', rest:'45s', notes:'Polia alta. Volume alto. Manter rotação externa.'},
+    {name:'Rosca scott barra W', sets:'3×10–12', rep:'10–12', rir:'RIR 0–1', rest:'60s', notes:'Banco scott. Amplitude plena. Supinação.'},
+    {name:'Rosca concentrada halter', sets:'3×12–15', rep:'12–15', rir:'RIR 0–1', rest:'45s', notes:'Cotovelo na coxa interna. Pico de contração.'},
+    {name:'Antebraço — rosca punho barra', sets:'3×15–20', rep:'15–20', rir:'RIR 0–1', rest:'45s', notes:'Pulso sobre banco ou joelho. Lento.'},
+  ],
+  legsB: [
+    {name:'Stiff barra (foco posterior)', sets:'4×8–10', rep:'8–10', rir:'RIR 1–2', rest:'2 min', notes:'Joelhos levemente dobrados. Alongar isquiotibiais.'},
+    {name:'Cadeira flexora', sets:'4×10–12', rep:'10–12', rir:'RIR 1–2', rest:'75s', notes:'Contração total. Pausa no encurtamento.'},
+    {name:'Hip thrust barra', sets:'4×10–12', rep:'10–12', rir:'RIR 1–2', rest:'90s', notes:'Banco atrás das escápulas. Squeeze glúteo no topo.'},
+    {name:'Mesa flexora unilateral', sets:'3×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Unilateral para corrigir assimetrias.'},
+    {name:'Bulgarian split squat halteres', sets:'3×10–12', rep:'10–12', rir:'RIR 0–1', rest:'75s', notes:'Cada perna. Joelho frontal alinhado ao pé.'},
+    {name:'Cadeira abdutora', sets:'4×15–20', rep:'15–20', rir:'RIR 0–1', rest:'45s', notes:'Foco glúteo médio. Velocidade controlada.'},
+    {name:'Panturrilha sentado', sets:'5×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Foco sóleo. Joelhos a 90°. Amplitude total.'},
+    {name:'Abdominal infra suspenso', sets:'4×12–15', rep:'12–15', rir:'RIR 0–1', rest:'60s', notes:'Barra fixa. Elevar joelhos/pernas. Core ativado.'},
+  ],
+};
+
+const MOB_MANHA = [
+  ['Gato-vaca', '2×10'],['World's greatest stretch', '5 cada lado'],
+  ['Hip circle', '10 cada direção'],['Squat de tornozelo', '2×10'],
+  ['Ombro rotação banda', '2×15'],['Quadrúpede extensão T', '2×8 cada'],
+  ['Leg swing lateral', '10 cada perna'],['Leg swing frontal', '10 cada perna'],
+  ['Foam roll coluna torácica', '60s'],['Respiração diafragmática', '5 respirações'],
+];
+const MOB_POS = [
+  ['Pigeon pose', '60s cada lado'],['Doorway chest stretch', '60s cada lado'],
+  ['Lat stretch no rack', '45s cada lado'],['Quad stretch em pé', '45s cada lado'],
+  ['Standing hamstring stretch', '45s cada lado'],['Shoulder cross-body', '45s cada lado'],
+  ['Tricep overhead stretch', '30s cada lado'],['Glute bridge isométrico', '2×20s'],
+  ['Respiração 4-7-8', '3 ciclos'],['Foam roll trapézio superior', '60s'],
+];
+const MOB_DOM = [
+  ['Bloco 1 — Ativação Geral (5 min)', 'Gato-vaca 2×10 · World\'s greatest stretch 5×cada · Hip circle 10×direção', '5min'],
+  ['Bloco 2 — Quadril e Posterior (10 min)', 'Pigeon pose 2min×lado · Pombo dinâmico 1min×lado · Half-kneeling hip flexor 90s×lado · Frog stretch 2min', '10min'],
+  ['Bloco 3 — Coluna e Torácico (8 min)', 'Foam roll torácico 2min · Extensão torácica no foam roll 2min · Rotação torácica sentada 1min×lado · Book opening 1min×lado', '8min'],
+  ['Bloco 4 — Ombros e Braços (7 min)', 'Doorway stretch 90s×lado · Rotação interna/externa 20×cada · Lat stretch 90s×lado · Antebraço extensão+flexão 60s×lado', '7min'],
+  ['Bloco 5 — Recuperação e Respiração (5 min)', 'Savasana 2min · Box breathing (4-4-4-4) 10 ciclos · Visualização do próximo treino 60s', '5min'],
+];
+
+const ALONG_PUSH = [
+  ['Doorway chest stretch', '60s/lado','Peito médio e superior'],
+  ['Tricep overhead (atrás cabeça)', '45s/lado','Tríceps longo'],
+  ['Cross-body shoulder stretch', '45s/lado','Delt posterior'],
+  ['Lat stretch no rack inclinado', '45s/lado','Grande dorsal (pré-ativação)'],
+  ['Neck side tilt', '30s/lado','Trapézio superior (tensão secundária)'],
+  ['Foam roll peitoral', '60s','Músculo peitoral'],
+  ['Child\'s pose', '60s','Ombro/tórax'],
+];
+const ALONG_PULL = [
+  ['Standing forward fold (joelhos dobrados)', '60s','Isquiotibiais + lombar'],
+  ['Supermão — Brachialis stretch', '45s/lado','Bíceps/braquial'],
+  ['Wrist flexor stretch', '30s/lado','Antebraço anterior'],
+  ['Wrist extensor stretch', '30s/lado','Antebraço posterior'],
+  ['Lat stretch (bar hang)', '30–45s','Grande dorsal'],
+  ['Thread-the-needle', '45s/lado','Romboides/trapézio médio'],
+  ['Child\'s pose braços estendidos', '60s','Costas completo'],
+];
+const ALONG_LEGS = [
+  ['Standing quad stretch', '60s/lado','Quadríceps'],
+  ['Pigeon pose', '90s/lado','Glúteo/piriforme'],
+  ['Standing hamstring (pé no banco)', '60s/lado','Isquiotibiais'],
+  ['Hip flexor lunge (kneeling)', '60s/lado','Psoas/ilíaco'],
+  ['Calf stretch (parede)', '45s/lado','Gastrocnêmio'],
+  ['Seated soleus stretch', '45s/lado','Sóleo'],
+  ['Foam roll IT band', '60s/lado','Tensão lateral coxa'],
+  ['Happy baby pose', '60s','Adutores + lombar'],
+];
+
+const MEALS = [
+  ['06:00','Café da manhã','~500 kcal','P40 C50 G15'],
+  ['09:00','Lanche 1','~300 kcal','P25 C30 G8'],
+  ['12:00','Almoço','~650 kcal','P55 C65 G20'],
+  ['15:00','Pré-treino','~400 kcal','P35 C50 G8'],
+  ['18:30','Intra (durante treino)','~150 kcal','P0 C35 G0'],
+  ['20:30','Pós-treino','~450 kcal','P55 C30 G10'],
+  ['22:00','Última refeição','~277 kcal','P30 C29 G14'],
+];
+
+const SUPLS = [
+  ['Whey Protein Isolado','30–35g','Pós-treino imediato','Síntese proteica'],
+  ['Creatina Monohidratada','5g','Pós-treino ou manhã','Força e recuperação'],
+  ['Cafeína','100–200mg','30–45min pré-treino','Performance e foco'],
+  ['Vitamina D3','4000–5000 UI','Com gordura (almoço)','Hormônios e imunidade'],
+  ['Ômega-3 (EPA+DHA)','2–3g','Refeição principal','Anti-inflamatório'],
+  ['Magnésio Bisglicinato','300–400mg','Noite (antes dormir)','Recuperação e sono'],
+  ['ZMA','Conforme rótulo','30min antes dormir','Hormônios e recuperação'],
+  ['BCAA (opcional)','5–10g','Intra-treino','Catabolismo (se em jejum)'],
+];
+
+const DICAS = [
+  'Pesagem: sempre em jejum, após urinar, pela manhã.',
+  'Foto-progresso: 4 ângulos (frente, costas, lado×2) sempre mesma iluminação.',
+  'Medições: fita métrica na posição relaxada, não comprimida.',
+  'Hidratação: 4L/dia — acompanhar cor da urina (amarelo claro = adequado).',
+  'Sono: 7–9h/noite · A maioria do GH é liberado nas primeiras 2h de sono profundo.',
+  'Meal prep: preparar proteína e carboidrato por 3–4 dias para facilitar aderência.',
+  'Janela de treino noturno: encerrar treino até 21h para não comprometer sono.',
+  'Álcool: zero durante o mesociclo (inibe síntese proteica e interfere no sono).',
+  'Monitorar peso diariamente: usar média semanal para avaliar tendência.',
+];
+const ALERTAS = [
+  'Dor aguda nas articulações (joelho, ombro, lombar) — parar e avaliar.',
+  'Vertigem ou náusea durante treino — reduzir intensidade imediatamente.',
+  'Queda de 10%+ no desempenho por 2 semanas seguidas sem motivo evidente.',
+  'Insônia persistente (>3 noites/semana) — revisar carga de treino e nutrição.',
+  'Frequência cardíaca em repouso elevada (+10 bpm acima da base) por 3+ dias.',
+  'Humor muito baixo, irritabilidade extrema, libido baixa — checar overtraining.',
+];
+
+// ─── RENDER EXERCISES ─────────────────────────────────────────────────────────
+function renderExercises(containerId, exercises) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = exercises.map((ex, i) => `
+    <div class="ex-row">
+      <div class="ex-num">${i+1}</div>
+      <div style="flex:1">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-meta">
+          <span class="pill pill-blue">${ex.sets}</span>
+          <span class="pill pill-green">${ex.rir}</span>
+          <span class="pill pill-amber">⏱ ${ex.rest}</span>
+          ${ex.notes ? `<span class="pill" style="max-width:300px">${ex.notes}</span>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── RENDER TABLES ────────────────────────────────────────────────────────────
+function renderMobilidade() {
+  document.getElementById('mob-manha-rows').innerHTML = MOB_MANHA.map((r,i) =>
+    `<tr><td>${i+1}</td><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+  document.getElementById('mob-pos-rows').innerHTML = MOB_POS.map((r,i) =>
+    `<tr><td>${i+1}</td><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+  document.getElementById('mob-dom-rows').innerHTML = MOB_DOM.map(r =>
+    `<tr><td><strong>${r[0]}</strong></td><td style="color:var(--muted);font-size:12px">${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+}
+function renderAlong() {
+  const render = (id, data) => {
+    document.getElementById(id).innerHTML = data.map((r,i) =>
+      `<tr><td>${i+1}</td><td>${r[0]}</td><td>${r[1]}</td><td style="color:var(--muted);font-size:12px">${r[2]}</td></tr>`).join('');
+  };
+  render('along-push-rows', ALONG_PUSH);
+  render('along-pull-rows', ALONG_PULL);
+  render('along-legs-rows', ALONG_LEGS);
+}
+function renderNutri() {
+  document.getElementById('meals-tbody').innerHTML = MEALS.map((m,i) =>
+    `<tr><td>${i+1}</td><td style="color:var(--muted)">${m[0]}</td><td>${m[1]}</td><td>${m[2]}</td><td style="color:var(--muted);font-size:11px">${m[3]}</td></tr>`).join('');
+  document.getElementById('supl-tbody').innerHTML = SUPLS.map(s =>
+    `<tr><td><strong>${s[0]}</strong></td><td>${s[1]}</td><td style="color:var(--muted)">${s[2]}</td><td style="color:var(--muted);font-size:12px">${s[3]}</td></tr>`).join('');
+  document.getElementById('dicas-list').innerHTML = DICAS.map(d =>
+    `<li style="padding:6px 0;border-bottom:1px solid var(--border2);font-size:13px">• ${d}</li>`).join('');
+  document.getElementById('alertas-list').innerHTML = ALERTAS.map(a =>
+    `<li style="padding:6px 0;border-bottom:1px solid var(--border2);font-size:13px;color:var(--red)">⚠ ${a}</li>`).join('');
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function nav(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.mob-btn').forEach(b => b.classList.remove('active'));
+  const sec = document.getElementById('sec-' + id);
+  if (sec) sec.classList.add('active');
+  // sidebar
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(n => { if (n.getAttribute('onclick') === `nav('${id}')`) n.classList.add('active'); });
+  // mobile
+  const mobBtns = document.querySelectorAll('.mob-btn');
+  mobBtns.forEach(b => { if (b.getAttribute('onclick') === `nav('${id}')`) b.classList.add('active'); });
+  if (id === 'tracker') loadTracker();
+  if (id === 'metricas') renderMetrics();
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+const tabPanels = {};
+function switchTab(group, panelId) {
+  const section = document.getElementById('sec-' + (
+    group === 'bike' ? 'bike' : group === 'nat' ? 'natacao' : group === 'mob' ? 'mobilidade' :
+    group === 'along' ? 'along' : 'nutricao'
+  ));
+  if (!section) return;
+  const tabs = section.querySelectorAll('.tab');
+  const panelIds = tabPanels[group];
+  if (!panelIds) return;
+  panelIds.forEach(pid => {
+    const el = document.getElementById(pid);
+    if (el) el.style.display = 'none';
+  });
+  const target = document.getElementById(group + '-' + panelId);
+  if (target) target.style.display = '';
+  tabs.forEach((t, i) => {
+    t.classList.toggle('active', panelIds[i] === group + '-' + panelId);
+  });
+}
+
+// Register tab groups
+tabPanels['bike'] = ['bike-hiit','bike-tabata','bike-liss','bike-outdoor'];
+tabPanels['nat'] = ['nat-tec','nat-int','nat-rec'];
+tabPanels['mob'] = ['mob-manha','mob-pos','mob-dom'];
+tabPanels['along'] = ['along-push','along-pull','along-legs'];
+tabPanels['nut'] = ['nut-calc','nut-refeicoes','nut-supl','nut-dicas'];
+
+// ─── TIMER ────────────────────────────────────────────────────────────────────
+let timerSecs = 60, timerRemain = 60, timerRunning = false, timerInterval = null;
+const timerDisp = document.getElementById('timer-display');
+
+function fmtTime(s) {
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+}
+function setTimer(s) {
+  resetTimer();
+  timerSecs = s;
+  timerRemain = s;
+  timerDisp.textContent = fmtTime(s);
+  timerDisp.className = '';
+}
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('btn-start').textContent = 'Iniciar';
+    timerDisp.classList.remove('running');
+  } else {
+    if (timerRemain <= 0) { timerRemain = timerSecs; }
+    timerRunning = true;
+    document.getElementById('btn-start').textContent = 'Pausar';
+    timerDisp.classList.add('running');
+    timerDisp.classList.remove('done');
+    timerInterval = setInterval(() => {
+      timerRemain--;
+      timerDisp.textContent = fmtTime(timerRemain);
+      if (timerRemain <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerDisp.textContent = '0:00';
+        timerDisp.className = 'done';
+        document.getElementById('btn-start').textContent = 'Iniciar';
+        try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA...').play().catch(()=>{}); } catch(e){}
+      }
+    }, 1000);
+  }
+}
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerRemain = timerSecs;
+  timerDisp.textContent = fmtTime(timerSecs);
+  timerDisp.className = '';
+  document.getElementById('btn-start').textContent = 'Iniciar';
+}
+
+// ─── TRACKER ─────────────────────────────────────────────────────────────────
+const NUM_SETS = 5;
+function trackerKey(week, ex) { return `tarso_tracker_S${week}_${ex}`; }
+
+function loadTracker() {
+  const week = document.getElementById('tracker-week').value;
+  const ex = document.getElementById('tracker-ex').value;
+  const exNames = {
+    supino_reto:'Supino reto barra', desenv_militar:'Desenvolvimento militar',
+    trap_bar:'Trap bar deadlift', barra_fixa:'Barra fixa lastrada',
+    remada_curvada:'Remada curvada barra', agachamento:'Agachamento livre',
+    hack_squat:'Hack squat', stiff:'Stiff barra', hip_thrust:'Hip thrust barra'
+  };
+  document.getElementById('tracker-ex-label').textContent = exNames[ex] || ex;
+
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(trackerKey(week, ex))) || {}; } catch(e) {}
+
+  const setsEl = document.getElementById('tracker-sets');
+  let html = '';
+  for (let s = 1; s <= NUM_SETS; s++) {
+    html += `<div class="tracker-set-row">
+      <label>Série ${s}</label>
+      <input type="number" id="t-${s}-kg" placeholder="kg" step="0.5" value="${data['s'+s+'kg']||''}" oninput="calcTonnage()" style="max-width:80px">
+      <span style="color:var(--muted);font-size:13px">×</span>
+      <input type="number" id="t-${s}-rep" placeholder="reps" value="${data['s'+s+'rep']||''}" oninput="calcTonnage()" style="max-width:72px">
+      <span style="color:var(--dim);font-size:12px" id="t-${s}-ton"></span>
+    </div>`;
+  }
+  setsEl.innerHTML = html;
+  document.getElementById('tracker-notes').value = data.notas || '';
+  calcTonnage();
+  renderTrackerHistory(week, ex);
+}
+
+function calcTonnage() {
+  let total = 0;
+  for (let s = 1; s <= NUM_SETS; s++) {
+    const kg = parseFloat(document.getElementById(`t-${s}-kg`)?.value) || 0;
+    const rep = parseFloat(document.getElementById(`t-${s}-rep`)?.value) || 0;
+    const ton = kg * rep;
+    total += ton;
+    const tonEl = document.getElementById(`t-${s}-ton`);
+    if (tonEl) tonEl.textContent = ton > 0 ? `= ${ton}kg` : '';
+  }
+  document.getElementById('tracker-tonnage').textContent = total > 0 ? total.toFixed(0) + ' kg' : '0 kg';
+}
+
+function saveTracker() {
+  const week = document.getElementById('tracker-week').value;
+  const ex = document.getElementById('tracker-ex').value;
+  const data = { notas: document.getElementById('tracker-notes').value };
+  for (let s = 1; s <= NUM_SETS; s++) {
+    data[`s${s}kg`] = document.getElementById(`t-${s}-kg`)?.value || '';
+    data[`s${s}rep`] = document.getElementById(`t-${s}-rep`)?.value || '';
+  }
+  try { localStorage.setItem(trackerKey(week, ex), JSON.stringify(data)); } catch(e) {}
+  renderTrackerHistory(week, ex);
+  showToast('Salvo!');
+}
+
+function clearTracker() {
+  if (!confirm('Limpar dados desta sessão?')) return;
+  const week = document.getElementById('tracker-week').value;
+  const ex = document.getElementById('tracker-ex').value;
+  try { localStorage.removeItem(trackerKey(week, ex)); } catch(e) {}
+  loadTracker();
+}
+
+function renderTrackerHistory(currentWeek, ex) {
+  const el = document.getElementById('tracker-history');
+  let rows = '';
+  for (let w = 1; w <= 8; w++) {
+    let data = {};
+    try { data = JSON.parse(localStorage.getItem(trackerKey(w, ex))) || {}; } catch(e) {}
+    let ton = 0;
+    let hasData = false;
+    for (let s = 1; s <= NUM_SETS; s++) {
+      const kg = parseFloat(data[`s${s}kg`]) || 0;
+      const rep = parseFloat(data[`s${s}rep`]) || 0;
+      if (kg || rep) hasData = true;
+      ton += kg * rep;
+    }
+    if (hasData) {
+      const setsStr = [1,2,3,4,5].map(s => {
+        const kg = data[`s${s}kg`]; const rep = data[`s${s}rep`];
+        return (kg || rep) ? `${kg||'?'}×${rep||'?'}` : null;
+      }).filter(Boolean).join(' · ');
+      rows += `<tr style="${w == currentWeek ? 'background:var(--bg3)' : ''}">
+        <td><strong>S${w}</strong></td><td style="font-size:12px;color:var(--muted)">${setsStr}</td>
+        <td><span style="color:var(--amber);font-weight:700">${ton.toFixed(0)} kg</span></td>
+      </tr>`;
+    }
+  }
+  el.innerHTML = rows ? `<table><thead><tr><th>Sem.</th><th>Séries</th><th>Tonelagem</th></tr></thead><tbody>${rows}</tbody></table>` : '<p style="color:var(--muted);font-size:13px">Nenhum dado salvo ainda.</p>';
+}
+
+// ─── METRICS ─────────────────────────────────────────────────────────────────
+function loadMetrics() {
+  try { return JSON.parse(localStorage.getItem('tarso_metrics')) || []; } catch(e) { return []; }
+}
+function saveMetrics() {
+  const fields = ['date','peso','gordura','cintura','quadril','peito','braco','coxa','panturrilha'];
+  const row = {};
+  fields.forEach(f => { row[f] = document.getElementById('m-'+f)?.value || ''; });
+  if (!row.date) { showToast('Informe a data.', true); return; }
+  const data = loadMetrics();
+  data.push(row);
+  data.sort((a,b) => a.date.localeCompare(b.date));
+  try { localStorage.setItem('tarso_metrics', JSON.stringify(data)); } catch(e) {}
+  renderMetrics();
+  showToast('Medição salva!');
+}
+function deleteMetric(idx) {
+  const data = loadMetrics();
+  data.splice(idx, 1);
+  try { localStorage.setItem('tarso_metrics', JSON.stringify(data)); } catch(e) {}
+  renderMetrics();
+}
+function renderMetrics() {
+  const data = loadMetrics();
+  const tbody = document.getElementById('metrics-tbody');
+  if (!tbody) return;
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="10" style="color:var(--muted);text-align:center">Nenhuma medição salva.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map((r,i) => `<tr>
+    <td>${r.date}</td><td>${r.peso||'—'}</td><td>${r.gordura||'—'}</td>
+    <td>${r.cintura||'—'}</td><td>${r.quadril||'—'}</td><td>${r.peito||'—'}</td>
+    <td>${r.braco||'—'}</td><td>${r.coxa||'—'}</td><td>${r.panturrilha||'—'}</td>
+    <td><button onclick="deleteMetric(${i})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px">×</button></td>
+  </tr>`).join('');
+}
+
+// ─── NUTRITION CALC ───────────────────────────────────────────────────────────
+function calcNutri() {
+  const peso = parseFloat(document.getElementById('n-peso').value) || 0;
+  const altura = parseFloat(document.getElementById('n-altura').value) || 0;
+  const idade = parseFloat(document.getElementById('n-idade').value) || 0;
+  const ativ = parseFloat(document.getElementById('n-ativ').value) || 1.75;
+  const deficit = parseFloat(document.getElementById('n-deficit').value) || 0;
+  const protG = parseFloat(document.getElementById('n-prot').value) || 2.4;
+
+  const tmb = Math.round(10*peso + 6.25*altura - 5*idade + 5);
+  const tdee = Math.round(tmb * ativ);
+  const target = Math.round(tdee * (1 - deficit/100));
+  const agua = (peso * 40 / 1000).toFixed(1);
+  const prot = Math.round(peso * protG);
+  const gord = Math.round(peso * 0.9);
+  const protKcal = prot * 4;
+  const gordKcal = gord * 9;
+  const carbKcal = target - protKcal - gordKcal;
+  const carb = Math.max(0, Math.round(carbKcal / 4));
+  const maxMacro = Math.max(prot, carb, gord) || 1;
+
+  document.getElementById('r-tmb').textContent = tmb;
+  document.getElementById('r-tdee').textContent = tdee;
+  document.getElementById('r-target').textContent = target;
+  document.getElementById('r-agua').textContent = agua + 'L';
+  document.getElementById('r-prot').textContent = prot + 'g';
+  document.getElementById('r-carb').textContent = carb + 'g';
+  document.getElementById('r-gord').textContent = gord + 'g';
+  document.getElementById('bar-prot').style.width = (prot/maxMacro*100)+'%';
+  document.getElementById('bar-carb').style.width = (carb/maxMacro*100)+'%';
+  document.getElementById('bar-gord').style.width = (gord/maxMacro*100)+'%';
+  document.getElementById('r-kcal-check').textContent =
+    `${protKcal} + ${carbKcal > 0 ? carb*4 : 0} + ${gordKcal} = ${protKcal + (carb*4) + gordKcal} kcal`;
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg, err) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;top:20px;right:20px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;transition:opacity .3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.background = err ? 'var(--red2)' : 'var(--green2)';
+  t.style.color = '#fff';
+  t.style.opacity = '1';
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => { t.style.opacity = '0'; }, 2000);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+(function init() {
+  renderExercises('pushA-exercises', EXERCISES.pushA);
+  renderExercises('pullA-exercises', EXERCISES.pullA);
+  renderExercises('legsA-exercises', EXERCISES.legsA);
+  renderExercises('pushB-exercises', EXERCISES.pushB);
+  renderExercises('pullB-exercises', EXERCISES.pullB);
+  renderExercises('legsB-exercises', EXERCISES.legsB);
+  renderMobilidade();
+  renderAlong();
+  renderNutri();
+  calcNutri();
+  // set today's date in metrics form
+  const today = new Date().toISOString().split('T')[0];
+  const dateEl = document.getElementById('m-date');
+  if (dateEl) dateEl.value = today;
+})();
+</script>
+</body>
+</html>
