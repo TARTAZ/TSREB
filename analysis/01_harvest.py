@@ -38,7 +38,7 @@ def get(url, tries=12):
             body = e.read()
             wait = 30
             if e.code == 429:
-                try: wait = float(json.loads(body).get("retryAfter", 30)) + 3
+                try: wait = min(90.0, float(json.loads(body).get("retryAfter", 30)) + 3)
                 except Exception: pass
             else:
                 print("HTTP", e.code, body[:200], flush=True)
@@ -60,9 +60,16 @@ def harvest(name, q):
         if not d["results"]: break
     return out[:MAXPER]
 
+import os
+CK = "data/checkpoints"; os.makedirs(CK, exist_ok=True)
 meta, works = {}, {}
 for name, q in QUERIES.items():
-    res = harvest(name, q)
+    ck = f"{CK}/{name}.json"
+    if os.path.exists(ck):                       # retomada: consulta já coletada
+        d = json.load(open(ck)); res, meta[name] = d["res"], d["count"]
+    else:
+        res = harvest(name, q)
+        json.dump({"res": res, "count": meta[name]}, open(ck, "w"))
     for w in res:
         e = works.setdefault(w["id"], w); e.setdefault("_q", [])
         if name not in e["_q"]: e["_q"].append(name)
