@@ -18,16 +18,22 @@
   "Q4_orchestration_ecosystem": 603,
   "Q5_coherence_proximity": 9715,
   "Q6_brazil_defense_innov": 622,
-  "Q7_defense_industrial_base": 1142
+  "Q7_defense_industrial_base": 1142,
+  "Q8_fsqca_ecosystem": 752,
+  "Q9_inclusive_institutions_IP": 474,
+  "Q10_techcapab_defense": 528
  },
  "max_per_query": 1200,
  "queries_done": [
+  "Q10_techcapab_defense",
   "Q1_dualuse_ecosystem",
   "Q2_defense_ecosystem",
   "Q3_dualuse_techtransfer",
   "Q4_orchestration_ecosystem",
   "Q5_coherence_proximity",
   "Q6_brazil_defense_innov",
-  "Q7_defense_industrial_base"
+  "Q7_defense_industrial_base",
+  "Q8_fsqca_ecosystem",
+  "Q9_inclusive_institutions_IP"
  ]
 }

@@ -1,7 +1,7 @@
 """Fase 1 - Busca avançada no OpenAlex (blocos derivados do projeto de pós-doc).
 Cada consulta = interseção de blocos conceituais, título+resumo, 1990-2026.
 Saída: data/raw.jsonl (uma obra por linha, com flags das consultas que a recuperaram)."""
-import json, time, sys, urllib.parse, urllib.request, urllib.error, collections
+import os, json, time, sys, urllib.parse, urllib.request, urllib.error, collections
 
 BASE = "https://api.openalex.org/works"
 FIELDS = ("id,doi,title,publication_year,type,cited_by_count,fwci,language,abstract_inverted_index,"
@@ -46,13 +46,13 @@ def get(url, tries=40):
             print(f"  aguardando {wait:.0f}s (tentativa {i+1})", flush=True); time.sleep(wait)
         except Exception as e:
             time.sleep(min(60, 3 * 2**i))
-    raise RuntimeError(url)
+    raise RuntimeError(url.split("api_key=")[0])
 
 def harvest(name, q):
     out, page = [], 1
     while len(out) < MAXPER:
         params = {"filter": f"title_and_abstract.search:{q},publication_year:1990-2026,type:article|review|book-chapter|book",
-                  "per-page": 200, "page": page, "select": FIELDS, "sort": "relevance_score:desc"}
+                  "per-page": 200, "page": page, **({"api_key": os.environ["OPENALEX_API_KEY"]} if os.environ.get("OPENALEX_API_KEY") else {}), "select": FIELDS, "sort": "relevance_score:desc"}
         url = BASE + "?" + urllib.parse.urlencode(params, quote_via=urllib.parse.quote)
         d = get(url)
         if name not in meta: meta[name] = d["meta"]["count"]

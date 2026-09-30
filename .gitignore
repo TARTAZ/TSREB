@@ -3,3 +3,4 @@ __pycache__/
 analysis/data/checkpoints/
 analysis/data/raw.jsonl
 analysis/out/run.log
+analysis/out/fig5_rede.png

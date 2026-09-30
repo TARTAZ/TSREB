@@ -1,115 +1,103 @@
 {
  "corpus": {
-  "n_unique": 5658,
-  "n_after_basic": 5656,
-  "share_with_abstract": 0.8343352192362093,
-  "n_before_dedup": 5656,
-  "n_after_dedup": 5330,
-  "n_relevant": 3250,
-  "share_with_abstract_relevant": 0.9326153846153846
+  "n_unique": 7288,
+  "n_after_basic": 7286,
+  "share_with_abstract": 0.846280538018117,
+  "n_before_dedup": 7286,
+  "n_after_dedup": 6844,
+  "n_relevant": 4188,
+  "share_with_abstract_relevant": 0.938872970391595
  },
  "flags_prevalence": {
-  "dual_use": 219,
-  "defense": 1491,
-  "ecosystem": 888,
-  "cluster_helix": 948,
-  "orchestration": 519,
-  "coher_prox": 216,
-  "tech_transfer": 1177,
-  "ip_patent": 337,
-  "institutions": 27,
-  "capabilities": 60,
-  "brazil": 361,
-  "emerging": 158,
-  "configurational": 18,
-  "network_sna": 62,
-  "mission_policy": 263
+  "dual_use": 248,
+  "defense": 1970,
+  "ecosystem": 1214,
+  "cluster_helix": 1069,
+  "orchestration": 539,
+  "coher_prox": 238,
+  "tech_transfer": 1318,
+  "ip_patent": 594,
+  "institutions": 42,
+  "capabilities": 375,
+  "brazil": 375,
+  "emerging": 216,
+  "configurational": 385,
+  "network_sna": 83,
+  "mission_policy": 340
  },
  "precision_check": {
-  "dual_use_total": 219,
-  "dual_use_and_defense_share": 0.634703196347032
+  "dual_use_total": 248,
+  "dual_use_and_defense_share": 0.6290322580645161
  },
  "trend_all": {
-  "growth_pct_per_year": 10.797199507142107,
+  "growth_pct_per_year": 11.429443032200792,
   "ci95": [
-   9.287563235600516,
-   12.327689035951783
+   9.540852961749557,
+   13.350594218964073
   ],
-  "p": 1.3825001157415826e-48
+  "p": 2.352152697153806e-35
  },
  "trend_by_theme": {
   "defesa/dual-use": {
-   "growth_pct_per_year": 12.349635225781075,
-   "p": 6.51897658628525e-17,
-   "n": 1571
+   "growth_pct_per_year": 11.562996021981697,
+   "p": 1.2974166285548625e-14,
+   "n": 2062
   },
   "ecossistema": {
-   "growth_pct_per_year": 29.980876176773343,
-   "p": 1.5350952888876216e-22,
-   "n": 888
+   "growth_pct_per_year": 34.170901720191395,
+   "p": 3.7564171479897305e-27,
+   "n": 1214
   },
   "orquestração": {
-   "growth_pct_per_year": 19.795663233472325,
-   "p": 8.865424662163139e-20,
-   "n": 519
+   "growth_pct_per_year": 19.736041570236672,
+   "p": 3.291750971730586e-18,
+   "n": 539
   },
   "configuracional (QCA)": {
-   "growth_pct_per_year": 49.982793283746844,
-   "p": 3.805676663860354e-08,
-   "n": 18
+   "growth_pct_per_year": 48.98214747796808,
+   "p": 2.7846024157272632e-30,
+   "n": 385
   }
  },
  "intersections": {
-  "orquestração ∩ defesa/dual-use": 7,
+  "orquestração ∩ defesa/dual-use": 11,
   "orquestração ∩ dual-use": 3,
   "coerência/proximidade ∩ dual-use": 2,
   "coerência/proximidade ∩ defesa ∩ ecossistema": 9,
-  "fsQCA ∩ defesa/dual-use": 1,
-  "fsQCA ∩ ecossistema": 15,
+  "fsQCA ∩ defesa/dual-use": 6,
+  "fsQCA ∩ ecossistema": 296,
   "Brasil ∩ defesa ∩ (cluster|ecossistema)": 53,
-  "Brasil ∩ dual-use": 11,
-  "PI/patente ∩ defesa ∩ instituições inclusivas": 2,
-  "capacidades tecnológicas ∩ defesa": 33,
+  "Brasil ∩ dual-use": 12,
+  "PI/patente ∩ defesa ∩ instituições inclusivas": 3,
+  "capacidades tecnológicas ∩ defesa": 328,
   "redes (ARS) ∩ defesa ∩ cluster": 6,
-  "TRIPLA do projeto: orquestração ∩ dual-use/defesa ∩ (cluster|ecossistema)": 5
+  "TRIPLA do projeto: orquestração ∩ dual-use/defesa ∩ (cluster|ecossistema)": 6
  },
  "lsa": {
-  "n_docs": 3031,
-  "n_terms": 9842,
-  "var_explained_100": 0.18022985100625602
+  "n_docs": 3932,
+  "n_terms": 13155,
+  "var_explained_100": 0.1612335545330559
  },
  "clustering": {
-  "k": 7,
-  "silhouette": 0.05360662402651614,
-  "stability_ARI": 0.7771774967624738,
-  "ARI_kmeans_vs_ward": 0.4815487861955381
+  "k": 9,
+  "silhouette": 0.05645894638974245,
+  "stability_ARI": 0.7358015406606855,
+  "ARI_kmeans_vs_ward": 0.3640456460222001
  },
  "cluster_terms": {
   "0": [
-   "brazil",
-   "brazilian",
-   "aerospace",
-   "military",
-   "space",
-   "political",
-   "power",
-   "project",
+   "property",
+   "intellectual property",
+   "intellectual",
+   "rights",
+   "protection",
+   "property rights",
+   "patent",
+   "law",
    "legal",
-   "law"
+   "patents"
   ],
   "1": [
-   "university",
-   "spin-offs",
-   "universities",
-   "spin-off",
-   "transfer",
-   "academic",
-   "technology transfer",
-   "technology",
-   "entrepreneurship",
-   "commercialization"
-  ],
-  "2": [
    "defense",
    "defense industry",
    "industry",
@@ -117,499 +105,551 @@
    "national defense",
    "indonesia",
    "industrial base",
-   "military",
    "base",
-   "national"
+   "national",
+   "industrial"
   ],
-  "3": [
-   "defence",
-   "defence industry",
-   "industry",
-   "defence industrial",
-   "defence industries",
-   "european defence",
-   "security",
-   "arms",
-   "european",
-   "procurement"
-  ],
-  "4": [
-   "ukraine",
-   "innovative",
-   "development",
-   "state",
-   "economy",
-   "enterprises",
-   "economic",
-   "conditions",
-   "innovative development",
-   "complex"
-  ],
-  "5": [
+  "2": [
    "ecosystems",
    "ecosystem",
    "orchestration",
    "innovation ecosystems",
    "value",
-   "digital",
-   "business ecosystem",
    "actors",
    "business",
-   "network"
+   "business ecosystem",
+   "network",
+   "digital"
+  ],
+  "3": [
+   "university",
+   "spin-offs",
+   "universities",
+   "spin-off",
+   "transfer",
+   "technology transfer",
+   "academic",
+   "technology",
+   "commercialization",
+   "entrepreneurship"
+  ],
+  "4": [
+   "defence",
+   "defence industry",
+   "industry",
+   "defence industrial",
+   "european",
+   "european defence",
+   "procurement",
+   "defence industries",
+   "arms",
+   "security"
+  ],
+  "5": [
+   "military",
+   "states",
+   "china",
+   "technological",
+   "united",
+   "security",
+   "united states",
+   "war",
+   "technological capabilities",
+   "capabilities"
   ],
   "6": [
+   "qualitative comparative",
+   "fsqca",
+   "comparative",
+   "configurations",
+   "qualitative",
+   "configurational",
+   "fuzzy-set",
+   "fuzzy-set qualitative",
+   "comparative fsqca",
+   "pathways"
+  ],
+  "7": [
    "cluster",
+   "aerospace",
    "clusters",
-   "industrial clusters",
+   "brazilian",
+   "brazil",
    "coherence",
-   "industrial",
+   "industrial clusters",
+   "aerospace industry",
    "proximity",
-   "industrial cluster",
-   "clustering",
-   "optical",
-   "confirmed"
+   "space"
+  ],
+  "8": [
+   "ukraine",
+   "innovative",
+   "development",
+   "economy",
+   "state",
+   "enterprises",
+   "economic",
+   "innovative development",
+   "ukrainian",
+   "implementation"
   ]
  },
  "similarity": {
-  "top1": 0.16834453356370088,
-  "p99": 0.1064360762578247,
-  "median": 0.028833968251415855
+  "top1": 0.18930392831166704,
+  "p99": 0.10644577681397191,
+  "median": 0.027161399831957683
  },
  "cluster_mean_similarity": {
-  "0": 0.02602104840065955,
-  "1": 0.037627392679208366,
-  "2": 0.036736827378674855,
-  "3": 0.023320156366770362,
-  "4": 0.02887030536968499,
-  "5": 0.039200563502252254,
-  "6": 0.03657679352644114
+  "0": 0.039511796235852194,
+  "1": 0.03501748281731845,
+  "2": 0.036307270091415725,
+  "3": 0.03432713818934233,
+  "4": 0.021523794439105366,
+  "5": 0.019975427390447893,
+  "6": 0.05560023839540267,
+  "7": 0.024641013174924196,
+  "8": 0.026338258724372638
  },
  "pca_flags": {
   "var_explained_top4": [
-   0.24092499353832472,
-   0.21452893483593805,
-   0.1444507173790712,
-   0.06965250638163448
+   0.23104032020613569,
+   0.18602686924530987,
+   0.1289242233743994,
+   0.06688425266642255
   ],
   "loadings_pc1": {
-   "defense": 0.7374994624322923,
-   "ecosystem": -0.45005030531245827,
-   "orchestration": -0.3832728654923199,
-   "tech_transfer": -0.23616423663280303,
-   "brazil": 0.15454769441544935,
-   "mission_policy": 0.09087152642202433
+   "defense": 0.7218095951311221,
+   "ecosystem": -0.5440654919417435,
+   "orchestration": -0.30820385255999416,
+   "configurational": -0.18468343338564108,
+   "capabilities": 0.14220175909682453,
+   "brazil": 0.09911908801533854
   },
   "loadings_pc2": {
-   "tech_transfer": 0.725492826184579,
-   "ecosystem": -0.4696142291890065,
-   "orchestration": -0.3575892284965875,
-   "defense": -0.23113304744830174,
-   "ip_patent": 0.19410764502373756,
-   "cluster_helix": 0.16763059340991981
+   "tech_transfer": 0.7570978149038945,
+   "ecosystem": -0.4043377848358429,
+   "defense": -0.3082769856155344,
+   "ip_patent": 0.256403022570754,
+   "orchestration": -0.21283804760061387,
+   "cluster_helix": 0.1790026571413467
   }
  },
  "emerging": {
-  "n_terms_tested": 2369,
+  "n_terms_tested": 3022,
   "top_up": [
    [
-    "technological advancements",
-    84.9,
+    "actionable insights",
+    384.7,
+    20
+   ],
+   [
+    "martial",
+    92.2,
     20
    ],
    [
     "adaptability",
-    76.3,
-    27
+    84.1,
+    32
    ],
    [
-    "defense capabilities",
-    75.8,
-    23
-   ],
-   [
-    "actionable",
-    73.4,
-    26
-   ],
-   [
-    "foundational",
-    64.8,
-    23
-   ],
-   [
-    "digital transformation",
-    64.2,
-    38
-   ],
-   [
-    "resilience",
-    53.5,
-    82
-   ],
-   [
-    "activities carried",
-    51.3,
+    "regulatory frameworks",
+    77.0,
     21
    ],
    [
-    "geopolitical",
-    44.4,
-    68
+    "actionable",
+    65.6,
+    48
    ],
    [
-    "advancements",
-    43.5,
-    42
-   ],
-   [
-    "aligning",
-    41.2,
-    25
-   ],
-   [
-    "full-scale",
-    41.0,
-    22
-   ],
-   [
-    "strategic autonomy",
-    40.8,
-    29
-   ],
-   [
-    "artificial intelligence",
-    40.7,
-    77
-   ],
-   [
-    "underscores",
-    38.2,
-    28
-   ],
-   [
-    "instability",
-    37.7,
-    29
-   ],
-   [
-    "employing",
-    36.9,
-    22
-   ],
-   [
-    "cybersecurity",
-    36.4,
-    30
-   ],
-   [
-    "ecosystem orchestration",
-    36.1,
+    "defense capabilities",
+    64.6,
     26
    ],
    [
-    "substantiated",
-    34.5,
+    "multidimensional",
+    56.9,
+    22
+   ],
+   [
+    "digital transformation",
+    54.1,
+    60
+   ],
+   [
+    "foundational",
+    52.3,
+    31
+   ],
+   [
+    "necessary condition",
+    51.6,
+    44
+   ],
+   [
+    "blockchain",
+    51.4,
+    20
+   ],
+   [
+    "digital innovation",
+    51.0,
+    35
+   ],
+   [
+    "resilience",
+    47.7,
+    104
+   ],
+   [
+    "activities carried",
+    46.9,
+    21
+   ],
+   [
+    "artificial intelligence",
+    44.7,
+    114
+   ],
+   [
+    "geopolitical",
+    44.1,
+    91
+   ],
+   [
+    "underscores",
+    43.6,
+    41
+   ],
+   [
+    "pathways",
+    41.9,
+    94
+   ],
+   [
+    "employing",
+    40.4,
     36
+   ],
+   [
+    "full-scale",
+    39.9,
+    28
    ]
   ],
   "top_down": [
    [
-    "tacit",
-    -16.1,
-    22
-   ],
-   [
-    "explicit",
-    -15.8,
-    21
-   ],
-   [
     "spin-off firms",
-    -15.5,
+    -16.4,
     20
    ],
    [
-    "institutes",
-    -15.3,
-    56
+    "founding",
+    -16.3,
+    25
    ],
    [
-    "old",
-    -15.1,
+    "institutes",
+    -16.1,
+    65
+   ],
+   [
+    "tacit",
+    -15.8,
+    25
+   ],
+   [
+    "healthy",
+    -15.7,
     21
+   ],
+   [
+    "spin offs",
+    -14.9,
+    32
+   ],
+   [
+    "offs",
+    -14.9,
+    32
    ],
    [
     "technology-based",
     -14.8,
-    34
+    35
    ],
    [
-    "province",
-    -14.5,
-    21
+    "countermeasures",
+    -14.0,
+    22
    ],
    [
-    "acquired",
-    -14.2,
-    24
-   ],
-   [
-    "faculty",
-    -13.9,
-    29
-   ],
-   [
-    "spin offs",
-    -13.9,
+    "old",
+    -13.7,
     32
    ]
   ]
  },
  "coword": {
   "nodes": 150,
-  "edges": 9248,
-  "density": 0.8275615212527965,
-  "modularity": 0.07300545195952687,
+  "edges": 9467,
+  "density": 0.847158836689038,
+  "modularity": 0.06846630730007115,
   "n_communities": 3,
   "bridges_top8": [
    "new",
-   "role",
    "economic",
+   "role",
    "policy",
    "key",
-   "process",
-   "management",
-   "growth"
+   "growth",
+   "market",
+   "process"
   ],
   "communities": [
    [
+    "role",
+    "process",
+    "knowledge",
+    "growth",
+    "transfer",
+    "activities",
+    "companies",
+    "institutions"
+   ],
+   [
+    "new",
+    "economic",
+    "technological",
+    "national",
+    "policy",
+    "global",
+    "including",
+    "technologies"
+   ],
+   [
+    "support",
     "strategic",
     "key",
-    "model",
-    "management",
     "data",
-    "case",
+    "model",
     "framework",
-    "challenges"
-   ],
-   [
-    "role",
-    "support",
     "business",
-    "process",
-    "growth",
-    "knowledge",
-    "market",
-    "public"
-   ],
-   [
-    "economic",
-    "new",
-    "national",
-    "technological",
-    "policy",
-    "technologies",
-    "industrial",
-    "global"
+    "management"
    ]
   ]
  },
  "countries": {
   "top10": [
    [
-    "US",
-    266
-   ],
-   [
     "CN",
-    223
+    411
    ],
    [
-    "BR",
-    193
+    "US",
+    360
    ],
    [
     "GB",
-    187
+    247
+   ],
+   [
+    "BR",
+    208
    ],
    [
     "UA",
-    131
+    168
    ],
    [
     "IT",
-    130
+    143
    ],
    [
     "ID",
-    126
+    136
    ],
    [
     "RU",
-    91
+    109
    ],
    [
     "DE",
-    78
+    103
    ],
    [
-    "SE",
-    72
+    "ES",
+    101
    ]
   ],
   "brasil": [
    [
-    193.0,
-    46.0,
-    0.05574983340764071
+    208.0,
+    58.0,
+    0.0439528671429124
    ]
   ],
-  "share_multi_country": 0.12061538461538461
+  "share_multi_country": 0.12129894937917861
  },
  "sources_top5": {
-  "Zenodo (CERN European Organization for Nuclear Research)": 77,
-  "Edward Elgar Publishing eBooks": 36,
-  "DOAJ (DOAJ: Directory of Open Access Journals)": 31,
-  "Defense Technical Information Center (DTIC)": 30,
-  "Sustainability": 29
+  "Zenodo (CERN European Organization for Nuclear Research)": 110,
+  "Sustainability": 59,
+  "Defense Technical Information Center (DTIC)": 42,
+  "Edward Elgar Publishing eBooks": 41,
+  "DOAJ (DOAJ: Directory of Open Access Journals)": 37
  },
  "impact": {
-  "n": 2253,
-  "overdispersion_pearson": 193.21782719689625,
-  "nb_alpha": 3.058010881932082,
-  "max_vif": 4.31,
+  "n": 2794,
+  "overdispersion_pearson": 186.8352248212153,
+  "nb_alpha": 3.145552601797258,
+  "max_vif": 4.49,
   "poisson_irr": {
    "log_auth_z": {
-    "IRR": 0.957,
-    "lo": 0.688,
-    "hi": 1.331,
-    "p": 0.793
+    "IRR": 1.023,
+    "lo": 0.809,
+    "hi": 1.295,
+    "p": 0.848
    },
    "intl": {
-    "IRR": 1.55,
-    "lo": 1.13,
-    "hi": 2.125,
-    "p": 0.007
+    "IRR": 1.468,
+    "lo": 1.059,
+    "hi": 2.034,
+    "p": 0.021
    },
    "review": {
-    "IRR": 0.733,
-    "lo": 0.391,
-    "hi": 1.374,
-    "p": 0.333
+    "IRR": 0.599,
+    "lo": 0.248,
+    "hi": 1.451,
+    "p": 0.256
    },
    "oa_i": {
-    "IRR": 1.332,
-    "lo": 0.797,
-    "hi": 2.225,
-    "p": 0.273
+    "IRR": 1.304,
+    "lo": 0.805,
+    "hi": 2.112,
+    "p": 0.28
    },
    "repo": {
-    "IRR": 0.477,
-    "lo": 0.088,
-    "hi": 2.587,
-    "p": 0.391
+    "IRR": 0.6,
+    "lo": 0.158,
+    "hi": 2.268,
+    "p": 0.451
    },
    "abs_len_z": {
-    "IRR": 1.082,
-    "lo": 0.919,
-    "hi": 1.274,
-    "p": 0.343
+    "IRR": 0.972,
+    "lo": 0.842,
+    "hi": 1.121,
+    "p": 0.692
    },
    "f_dual_use": {
-    "IRR": 0.256,
-    "lo": 0.146,
-    "hi": 0.448,
+    "IRR": 0.31,
+    "lo": 0.163,
+    "hi": 0.591,
     "p": 0.0
    },
    "f_orchestration": {
-    "IRR": 1.677,
-    "lo": 1.106,
-    "hi": 2.544,
-    "p": 0.015
+    "IRR": 1.262,
+    "lo": 0.834,
+    "hi": 1.91,
+    "p": 0.271
    },
    "f_brazil": {
-    "IRR": 0.47,
-    "lo": 0.262,
-    "hi": 0.843,
-    "p": 0.011
+    "IRR": 0.441,
+    "lo": 0.229,
+    "hi": 0.853,
+    "p": 0.015
    },
    "f_configurational": {
-    "IRR": 1.108,
-    "lo": 0.563,
-    "hi": 2.181,
-    "p": 0.766
+    "IRR": 0.984,
+    "lo": 0.598,
+    "hi": 1.621,
+    "p": 0.95
    },
    "C_0": {
-    "IRR": 0.595,
-    "lo": 0.293,
-    "hi": 1.21,
-    "p": 0.152
+    "IRR": 0.536,
+    "lo": 0.235,
+    "hi": 1.225,
+    "p": 0.139
+   },
+   "C_1": {
+    "IRR": 0.192,
+    "lo": 0.107,
+    "hi": 0.344,
+    "p": 0.0
    },
    "C_2": {
-    "IRR": 0.185,
-    "lo": 0.098,
-    "hi": 0.349,
-    "p": 0.0
+    "IRR": 1.77,
+    "lo": 1.069,
+    "hi": 2.93,
+    "p": 0.026
    },
    "C_3": {
-    "IRR": 0.206,
-    "lo": 0.113,
-    "hi": 0.375,
-    "p": 0.0
+    "IRR": 1.178,
+    "lo": 0.585,
+    "hi": 2.371,
+    "p": 0.646
    },
    "C_4": {
-    "IRR": 0.141,
-    "lo": 0.086,
-    "hi": 0.23,
+    "IRR": 0.243,
+    "lo": 0.144,
+    "hi": 0.407,
     "p": 0.0
    },
    "C_5": {
-    "IRR": 1.185,
-    "lo": 0.722,
-    "hi": 1.946,
-    "p": 0.502
+    "IRR": 0.195,
+    "lo": 0.108,
+    "hi": 0.354,
+    "p": 0.0
    },
    "C_6": {
-    "IRR": 1.233,
-    "lo": 0.481,
-    "hi": 3.162,
-    "p": 0.662
+    "IRR": 1.903,
+    "lo": 1.053,
+    "hi": 3.439,
+    "p": 0.033
+   },
+   "C_8": {
+    "IRR": 0.165,
+    "lo": 0.083,
+    "hi": 0.327,
+    "p": 0.0
    },
    "R_AmLatina": {
-    "IRR": 0.635,
-    "lo": 0.396,
-    "hi": 1.019,
-    "p": 0.06
+    "IRR": 0.588,
+    "lo": 0.379,
+    "hi": 0.913,
+    "p": 0.018
    },
    "R_N.América": {
-    "IRR": 2.973,
-    "lo": 1.539,
-    "hi": 5.741,
-    "p": 0.001
+    "IRR": 2.732,
+    "lo": 1.425,
+    "hi": 5.238,
+    "p": 0.002
    },
    "R_Outros": {
-    "IRR": 0.62,
-    "lo": 0.433,
-    "hi": 0.887,
-    "p": 0.009
+    "IRR": 0.632,
+    "lo": 0.457,
+    "hi": 0.872,
+    "p": 0.005
    },
    "R_Ásia": {
-    "IRR": 0.576,
-    "lo": 0.373,
-    "hi": 0.889,
-    "p": 0.013
+    "IRR": 0.671,
+    "lo": 0.477,
+    "hi": 0.945,
+    "p": 0.022
    }
   },
   "robust_across_models": [
+   "C_1",
    "C_2",
-   "C_3",
    "C_4",
+   "C_5",
+   "C_8",
+   "R_AmLatina",
    "R_Outros",
    "R_Ásia",
    "f_brazil",
-   "f_orchestration",
    "intl"
   ],
-  "pseudo_R2_poisson": 0.2992194998338258
+  "pseudo_R2_poisson": 0.28468692116571226
  }
 }
