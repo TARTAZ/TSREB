@@ -28,7 +28,7 @@ QUERIES = {
 }
 MAXPER = 1200
 
-def get(url, tries=12):
+def get(url, tries=40):
     for i in range(tries):
         try:
             with urllib.request.urlopen(url, timeout=90) as r:
