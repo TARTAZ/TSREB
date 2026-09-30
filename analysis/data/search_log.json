@@ -1,0 +1,39 @@
+{
+ "queries": {
+  "Q1_dualuse_ecosystem": "(\"dual-use\" OR \"dual use\" OR \"civil-military\" OR \"military-civil\" OR \"spin-off\" OR \"spin-in\" OR \"spinoff\") AND (\"innovation ecosystem\" OR \"innovation cluster\" OR \"innovation system\" OR \"triple helix\" OR \"quadruple helix\" OR \"industrial cluster\")",
+  "Q2_defense_ecosystem": "(defense OR defence OR military OR aerospace OR \"armed forces\") AND (\"innovation ecosystem\" OR \"innovation cluster\" OR \"innovation system\" OR \"triple helix\" OR \"quadruple helix\" OR \"industrial cluster\")",
+  "Q3_dualuse_techtransfer": "(\"dual-use\" OR \"dual use\" OR \"civil-military\" OR \"military-civil\" OR \"spin-off\" OR \"spin-in\" OR \"spinoff\") AND (\"technology transfer\" OR \"technology transfers\" OR commercialization OR \"intellectual property\")",
+  "Q4_orchestration_ecosystem": "(orchestrator OR orchestration OR \"ecosystem orchestration\" OR \"hub firm\" OR \"keystone\") AND (\"innovation ecosystem\" OR \"business ecosystem\" OR \"entrepreneurial ecosystem\" OR \"innovation network\")",
+  "Q5_coherence_proximity": "(coherence OR \"proximity dimensions\" OR \"cognitive proximity\" OR \"institutional proximity\") AND (ecosystem OR cluster OR \"innovation network\")",
+  "Q6_brazil_defense_innov": "(Brazil OR Brazilian) AND (defense OR defence OR military OR aerospace OR \"armed forces\") AND (innovation OR \"technology transfer\" OR cluster OR \"industrial base\")",
+  "Q7_defense_industrial_base": "(\"defense industrial base\" OR \"defence industrial base\" OR \"defense industry\" OR \"defence industry\") AND (innovation OR \"technology transfer\" OR \"small and medium\" OR SME OR supplier)",
+  "Q8_fsqca_ecosystem": "(\"fuzzy-set qualitative comparative\" OR fsQCA OR \"qualitative comparative analysis\") AND (ecosystem OR cluster OR \"innovation network\" OR \"technological capabilities\" OR \"technological capability\")",
+  "Q9_inclusive_institutions_IP": "(\"inclusive institutions\" OR \"extractive institutions\" OR \"intellectual property\") AND (military OR defense OR defence) AND (innovation OR \"technology transfer\")",
+  "Q10_techcapab_defense": "(\"technological capabilities\" OR \"technological capability\" OR \"technological accumulation\" OR \"technological learning\") AND (defense OR defence OR aerospace OR military)"
+ },
+ "hits_total": {
+  "Q1_dualuse_ecosystem": 444,
+  "Q2_defense_ecosystem": 753,
+  "Q3_dualuse_techtransfer": 2740,
+  "Q4_orchestration_ecosystem": 603,
+  "Q5_coherence_proximity": 9715,
+  "Q6_brazil_defense_innov": 622,
+  "Q7_defense_industrial_base": 1142,
+  "Q8_fsqca_ecosystem": 752,
+  "Q9_inclusive_institutions_IP": 474,
+  "Q10_techcapab_defense": 528
+ },
+ "max_per_query": 1200,
+ "queries_done": [
+  "Q10_techcapab_defense",
+  "Q1_dualuse_ecosystem",
+  "Q2_defense_ecosystem",
+  "Q3_dualuse_techtransfer",
+  "Q4_orchestration_ecosystem",
+  "Q5_coherence_proximity",
+  "Q6_brazil_defense_innov",
+  "Q7_defense_industrial_base",
+  "Q8_fsqca_ecosystem",
+  "Q9_inclusive_institutions_IP"
+ ]
+}
