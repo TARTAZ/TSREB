@@ -1,3 +1,5 @@
 analysis/data/harvest.log
 __pycache__/
 analysis/data/checkpoints/
+analysis/data/raw.jsonl
+analysis/out/run.log

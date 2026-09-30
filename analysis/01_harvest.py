@@ -22,9 +22,9 @@ QUERIES = {
  "Q5_coherence_proximity": f'{COH} AND (ecosystem OR cluster OR "innovation network")',
  "Q6_brazil_defense_innov": f'(Brazil OR Brazilian) AND {DEF} AND (innovation OR "technology transfer" OR cluster OR "industrial base")',
  "Q7_defense_industrial_base": '("defense industrial base" OR "defence industrial base" OR "defense industry" OR "defence industry") AND (innovation OR "technology transfer" OR "small and medium" OR SME OR supplier)',
- "Q8_fsqca_ecosystem": '("fuzzy-set qualitative comparative" OR fsQCA OR "qualitative comparative analysis") AND (ecosystem OR cluster OR "innovation network" OR "technological capabilit*")',
+ "Q8_fsqca_ecosystem": '("fuzzy-set qualitative comparative" OR fsQCA OR "qualitative comparative analysis") AND (ecosystem OR cluster OR "innovation network" OR "technological capabilities" OR "technological capability")',
  "Q9_inclusive_institutions_IP": '("inclusive institutions" OR "extractive institutions" OR "intellectual property") AND (military OR defense OR defence) AND (innovation OR "technology transfer")',
- "Q10_techcapab_defense": '("technological capabilit*" OR "technological accumulation" OR "technological learning") AND (defense OR defence OR aerospace OR military)',
+ "Q10_techcapab_defense": '("technological capabilities" OR "technological capability" OR "technological accumulation" OR "technological learning") AND (defense OR defence OR aerospace OR military)',
 }
 MAXPER = 1200
 
@@ -67,6 +67,8 @@ for name, q in QUERIES.items():
     ck = f"{CK}/{name}.json"
     if os.path.exists(ck):                       # retomada: consulta já coletada
         d = json.load(open(ck)); res, meta[name] = d["res"], d["count"]
+    elif os.environ.get("PARTIAL") == "1":
+        print(f"{name}: SEM CHECKPOINT (modo parcial, pulada)", flush=True); continue
     else:
         res = harvest(name, q)
         json.dump({"res": res, "count": meta[name]}, open(ck, "w"))
@@ -77,5 +79,5 @@ for name, q in QUERIES.items():
 
 with open("data/raw.jsonl", "w") as f:
     for w in works.values(): f.write(json.dumps(w) + "\n")
-json.dump({"queries": QUERIES, "hits_total": meta, "max_per_query": MAXPER}, open("data/search_log.json", "w"), indent=1, ensure_ascii=False)
+json.dump({"queries": QUERIES, "hits_total": meta, "max_per_query": MAXPER, "queries_done": sorted(meta)}, open("data/search_log.json", "w"), indent=1, ensure_ascii=False)
 print("ÚNICAS:", len(works))

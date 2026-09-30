@@ -77,7 +77,21 @@ FLAGS = {
 }
 low = df.text.str.lower()
 for k, p in FLAGS.items(): df["f_" + k] = low.str.contains(p, regex=True)
+BIO = r"plant|pathogen|immun|\bgene|protein|\bcells?\b|disease|patient|clinical|species|virus|bacteri|infect|firefight|veterinar|\bdog\b|therapy|tumou?r"
+df["f_defense"] = df.f_defense & ~low.str.contains(BIO)
 df["core_du_def"] = df.f_dual_use | df.f_defense
+
+# ---- deduplicação por título normalizado + filtro de relevância por regras (declarado no relatório)
+df["nt"] = df.title.map(lambda t: re.sub(r"[^a-z0-9]+", " ", t.lower()).strip())
+n_before = len(df); df = df.sort_values("cites", ascending=False).drop_duplicates("nt").copy(); n_dedup = len(df)
+low = df.text.str.lower()
+INNOV_A = r"innovation|entrepreneur|technology transfer|industr|firm|business|commerciali[sz]ation|technolog|policy|econom"
+INNOV_B = r"innovation|entrepreneur|business|industr|firm"
+df["relevant"] = (((df.f_defense | df.f_dual_use) & low.str.contains(INNOV_A)) |
+                  ((df.f_ecosystem | df.f_orchestration | df.f_cluster_helix | df.f_tech_transfer) & low.str.contains(INNOV_B)))
+n_rel_pre = int(df.relevant.sum()); df = df[df.relevant].copy()
+R["corpus"].update({"n_before_dedup": int(n_before), "n_after_dedup": int(n_dedup), "n_relevant": n_rel_pre,
+                    "share_with_abstract_relevant": float(df.has_abs.mean())})
 R["flags_prevalence"] = {k: int(df["f_" + k].sum()) for k in FLAGS}
 # precisão da busca: dos documentos que dizem "dual-use", quantos têm contexto de defesa?
 R["precision_check"] = {"dual_use_total": int(df.f_dual_use.sum()),
@@ -118,11 +132,11 @@ piv = gap.pivot(index="teoria", columns="contexto", values="odds_ratio").loc[the
 obs = gap.pivot(index="teoria", columns="contexto", values="obs").loc[theory, context]
 fig, ax = plt.subplots(figsize=(7.2, 3.8))
 lo = np.log2(piv.values); im = ax.imshow(lo, cmap="PuOr_r", vmin=-3, vmax=3, aspect="auto"); ax.grid(False)
-ax.set_xticks(range(len(context))); ax.set_xticklabels(context, rotation=35, ha="right"); ax.set_yticks(range(len(theory))); ax.set_yticklabels(theory)
+ax.set_xticks(range(len(context))); ax.set_xticklabels(context, rotation=35, ha="right"); ax.set_yticks(range(len(theory))); ax.set_yticklabels([t + ("*" if t in ("institutions", "capabilities", "configurational") else "") for t in theory])
 for i in range(len(theory)):
     for j in range(len(context)): ax.text(j, i, int(obs.values[i, j]), ha="center", va="center", fontsize=8, color=INK)
-plt.colorbar(im, label="log2(odds ratio)  — laranja: sub-representado · roxo: sobre-representado")
-ax.set_title("Mapa de lacunas: teoria × contexto (n = nº de artigos)", loc="left", color=INK)
+plt.colorbar(im, label="log2(odds ratio) — roxo: sub-representado · laranja: sobre-representado")
+ax.set_title("Mapa de lacunas: teoria × contexto (n = nº de artigos; * = tema ainda não buscado ativamente)", loc="left", color=INK)
 plt.savefig(OUT + "fig2_lacunas.png"); plt.close()
 
 # interseções críticas do projeto
@@ -142,6 +156,11 @@ inter = {
  "TRIPLA do projeto: orquestração ∩ dual-use/defesa ∩ (cluster|ecossistema)": df.f_orchestration & df.core_du_def & (df.f_cluster_helix | df.f_ecosystem),
 }
 R["intersections"] = {k: cnt(v) for k, v in inter.items()}
+rows_ = []
+for nm_, mk_ in inter.items():
+    for _, r_ in df[mk_].sort_values("cites", ascending=False).head(60).iterrows():
+        rows_.append((nm_, r_.year, r_.title, r_.cites, r_.source))
+pd.DataFrame(rows_, columns=["interseccao", "ano", "titulo", "citacoes", "fonte"]).to_csv(OUT + "interseccoes_criticas.csv", index=False)
 near = df[inter["TRIPLA do projeto: orquestração ∩ dual-use/defesa ∩ (cluster|ecossistema)"] | inter["coerência/proximidade ∩ defesa ∩ ecossistema"]
           | inter["Brasil ∩ defesa ∩ (cluster|ecossistema)"] | inter["fsQCA ∩ defesa/dual-use"] | inter["orquestração ∩ dual-use"]]
 near[["year", "title", "cites", "source", "doi"]].sort_values("cites", ascending=False).to_csv(OUT + "literatura_proxima.csv", index=False)
@@ -170,7 +189,7 @@ km = KMeans(K, n_init=20, random_state=SEED).fit(Z); T["cl"] = km.labels_
 ward = AgglomerativeClustering(K, linkage="ward").fit_predict(Z)
 R["clustering"] = {"k": K, "silhouette": float(sel[sel.k == K].silhouette.iloc[0]), "stability_ARI": float(sel[sel.k == K].stability_ARI.iloc[0]),
                    "ARI_kmeans_vs_ward": float(adjusted_rand_score(T.cl, ward))}
-terms = np.array(tf.get_feature_names_out()); C = normalize(km.cluster_centers_) @ normalize(svd.components_).T
+terms = np.array(tf.get_feature_names_out())
 # termos-descritores: centróide projetado no espaço TF-IDF
 desc = {}
 for c in range(K):
@@ -214,7 +233,7 @@ Tt = df[df.has_abs & df.year.between(2010, 2025)].reset_index(drop=True); Xc = c
 years = np.arange(2010, 2026); Nd = np.array([(Tt.year == y).sum() for y in years]); em = []
 for j in range(Xc.shape[1]):
     col = np.asarray(Xc[:, j].todense()).ravel(); cnts = np.array([col[(Tt.year == y).values].sum() for y in years])
-    if cnts.sum() < 20: continue
+    if cnts.sum() < 20 or Tt.source[col > 0].nunique() < 6: continue
     try:
         r = sm.GLM(cnts, sm.add_constant(years - 2010), family=sm.families.Poisson(), offset=np.log(Nd)).fit(cov_type="HC1")
         em.append((vocab[j], int(cnts.sum()), r.params[1], r.pvalues[1]))
@@ -229,26 +248,26 @@ ax.barh(u.termo, u.cresc_pct_ano, color=CAT[0], height=.6); ax.set_xlabel("cresc
 ax.set_title("Termos emergentes 2010–2025 (Poisson robusto, FDR<5%)", loc="left", color=INK); plt.savefig(OUT + "fig4_emergentes.png"); plt.close()
 
 # ------------------------------------------------------------------ 5. Rede de coocorrência de palavras-chave + rede de países
-kwc = collections.Counter(k.lower() for ks in df.keywords for k in set(ks)); top = {k for k, v in kwc.most_common(120)}
-ed = collections.Counter()
-for ks in df.keywords:
-    ks = sorted({k.lower() for k in ks} & top)
-    for a, b in itertools.combinations(ks, 2): ed[(a, b)] += 1
-G = nx.Graph(); G.add_weighted_edges_from([(a, b, w) for (a, b), w in ed.items() if w >= 3])
-G.remove_nodes_from(list(nx.isolates(G)))
+cvw = CountVectorizer(stop_words=stop, ngram_range=(1, 2), min_df=25, max_df=0.35, binary=True, token_pattern=r"(?u)\b[a-zA-Z][a-zA-Z\-]{2,}\b")
+Xw = cvw.fit_transform(df[df.has_abs].text); vw = np.array(cvw.get_feature_names_out())
+ti = np.argsort(-np.asarray(Xw.sum(0)).ravel())[:150]; Xs = Xw[:, ti].astype(float); co = (Xs.T @ Xs).toarray(); dfq = np.diag(co).copy()
+assoc = co / np.sqrt(np.outer(dfq, dfq)); G = nx.Graph()
+for a in range(len(ti)):
+    for b in range(a + 1, len(ti)):
+        if assoc[a, b] >= 0.12 and vw[ti[a]] not in vw[ti[b]] and vw[ti[b]] not in vw[ti[a]]: G.add_edge(vw[ti[a]], vw[ti[b]], weight=float(assoc[a, b]))
 comm = nx.community.louvain_communities(G, weight="weight", seed=SEED); mod = nx.community.modularity(G, comm, weight="weight")
 btw = nx.betweenness_centrality(G, weight=None); deg = dict(G.degree(weight="weight"))
 kw = pd.DataFrame({"kw": list(G.nodes), "grau_pond": [deg[n] for n in G], "betweenness": [btw[n] for n in G],
                    "comunidade": [next(i for i, c in enumerate(comm) if n in c) for n in G]}).sort_values("betweenness", ascending=False)
 kw.to_csv(OUT + "rede_palavras.csv", index=False)
 R["coword"] = {"nodes": G.number_of_nodes(), "edges": G.number_of_edges(), "density": float(nx.density(G)), "modularity": float(mod),
-               "n_communities": len(comm), "bridges_top8": kw.head(8).kw.tolist()}
-fig, ax = plt.subplots(figsize=(7.2, 5.2)); pos = nx.spring_layout(G, seed=SEED, k=.6, weight="weight")
-cid = dict(zip(kw.kw, kw.comunidade))
+               "n_communities": len(comm), "bridges_top8": kw.head(8).kw.tolist(),
+               "communities": [sorted(c, key=lambda n: -deg[n])[:8] for c in comm]}
+fig, ax = plt.subplots(figsize=(7.2, 5.2)); pos = nx.spring_layout(G, seed=SEED, k=.9, weight="weight"); cid = dict(zip(kw.kw, kw.comunidade))
 nx.draw_networkx_edges(G, pos, ax=ax, alpha=.15, width=.6, edge_color=MUTED)
-nx.draw_networkx_nodes(G, pos, ax=ax, node_size=[20 + 6 * deg[n] for n in G], node_color=[CAT[cid[n] % 8] for n in G], linewidths=.6, edgecolors="white")
-nx.draw_networkx_labels(G, pos, ax=ax, labels={n: n for n in kw.head(18).kw}, font_size=7, font_color=INK); ax.axis("off")
-ax.set_title(f"Rede de palavras-chave (modularidade Q={mod:.2f}; cores = comunidades Louvain)", loc="left", color=INK); plt.savefig(OUT + "fig5_rede.png"); plt.close()
+nx.draw_networkx_nodes(G, pos, ax=ax, node_size=[30 + 25 * deg[n] for n in G], node_color=[CAT[cid[n] % 8] for n in G], linewidths=.6, edgecolors="white")
+nx.draw_networkx_labels(G, pos, ax=ax, labels={n: n for n in kw.sort_values("grau_pond", ascending=False).head(22).kw}, font_size=7, font_color=INK); ax.axis("off")
+ax.set_title(f"Rede de termos do texto (modularidade Q={mod:.2f}; cores = comunidades Louvain)", loc="left", color=INK); plt.savefig(OUT + "fig5_rede.png"); plt.close()
 
 cw = collections.Counter(); ct = collections.Counter()
 for cs in df.countries:
@@ -270,11 +289,11 @@ M = T[T.year <= 2024].copy()
 M["age"] = 2026 - M.year + 1
 M["region"] = M.first_cty.map(REG).fillna("Outros")
 M["log_auth"] = np.log1p(M.n_auth); M["intl"] = (M.n_cty > 1).astype(int); M["review"] = (M.type == "review").astype(int)
-M["oa_i"] = M.oa.astype(int); M["abs_len_z"] = (np.log(M.abstract.str.len()) - np.log(M.abstract.str.len()).mean()) / np.log(M.abstract.str.len()).std()
+M["repo"] = M.source.fillna("").str.contains("Zenodo|DOAJ|repository|arXiv|SSRN", case=False).astype(int); M["oa_i"] = M.oa.astype(int); M["abs_len_z"] = (np.log(M.abstract.str.len()) - np.log(M.abstract.str.len()).mean()) / np.log(M.abstract.str.len()).std()
 M["log_auth_z"] = (M.log_auth - M.log_auth.mean()) / M.log_auth.std()
 D = pd.get_dummies(M.cl, prefix="C", drop_first=False).astype(int); ref = f"C_{M.cl.value_counts().idxmax()}"; D = D.drop(columns=ref)
 Rg = pd.get_dummies(M.region, prefix="R").astype(int).drop(columns="R_Europa", errors="ignore")
-Xm = pd.concat([M[["log_auth_z", "intl", "review", "oa_i", "abs_len_z"]], M[["f_dual_use", "f_orchestration", "f_brazil", "f_configurational"]].astype(int), D, Rg], axis=1).astype(float)
+Xm = pd.concat([M[["log_auth_z", "intl", "review", "oa_i", "repo", "abs_len_z"]], M[["f_dual_use", "f_orchestration", "f_brazil", "f_configurational"]].astype(int), D, Rg], axis=1).astype(float)
 Xm = sm.add_constant(Xm); ym = M.cites.values.astype(float)
 vif = pd.Series([variance_inflation_factor(Xm.values, i) for i in range(1, Xm.shape[1])], index=Xm.columns[1:]).round(2); vif.to_csv(OUT + "vif.csv")
 pois = sm.GLM(ym, Xm, family=sm.families.Poisson(), offset=np.log(M.age.values)).fit(cov_type="HC1")
